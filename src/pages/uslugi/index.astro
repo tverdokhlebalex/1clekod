@@ -1,0 +1,53 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Card from "@/components/ui/Card.astro";
+import Container from "@/components/ui/Container.astro";
+import { Icon } from "@/components/ui/Icon";
+import IconBox from "@/components/ui/IconBox.astro";
+import { getServices, getSite } from "@/lib/content";
+
+const site = getSite();
+const services = await getServices();
+const groups = [
+  { id: "primary", title: "Основные направления", items: services.filter((item) => item.data.group === "primary") },
+  { id: "related", title: "Сайт, внедрение и склад", items: services.filter((item) => item.data.group === "related") }
+];
+---
+
+<BaseLayout
+  description="Услуги Лёгкого кода: сопровождение 1С, обмены, интеграция с Битрикс24, аудит, срочная помощь, сайты и склад."
+  title={`Услуги — ${site.name}`}
+>
+  <main class="bg-hero" id="main-content">
+    <Container class="py-16 sm:py-20">
+      <Badge>Услуги</Badge>
+      <h1 class="mt-4 max-w-3xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl">Страницы под конкретную задачу</h1>
+      <p class="mt-5 max-w-2xl text-lg leading-8 text-[var(--color-muted)]">
+        Каждое направление — отдельный адрес. Так проще править текст и SEO, не переписывая главную.
+      </p>
+      {
+        groups.map((group) => (
+          <section class="mt-12">
+            <h2 class="text-2xl font-semibold">{group.title}</h2>
+            <div class="mt-6 grid gap-5 md:grid-cols-2">
+              {group.items.map((item) => (
+                <Card href={`/uslugi/${item.data.slug}`}>
+                  <div class="flex items-start gap-4">
+                    <IconBox class="bg-[var(--color-gold-soft)] shadow-none">
+                      <Icon name={item.data.icon} />
+                    </IconBox>
+                    <div>
+                      <h3 class="text-xl font-semibold">{item.data.title}</h3>
+                      <p class="mt-2 text-sm leading-6 text-[var(--color-muted)]">{item.data.summary}</p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </Container>
+  </main>
+</BaseLayout>

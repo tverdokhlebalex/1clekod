@@ -1,0 +1,74 @@
+---
+import { Icon } from "@/components/ui/Icon";
+import { ContactForm } from "@/components/islands/ContactForm";
+import Badge from "@/components/ui/Badge.astro";
+import Card from "@/components/ui/Card.astro";
+import Section from "@/components/ui/Section.astro";
+import type { HomeContent, SiteContent, Tariff } from "@/lib/schema";
+
+type Option = { slug: string; name: string };
+
+type Props = {
+  site: SiteContent;
+  contact: HomeContent["contact"];
+  tariffs: Tariff[];
+  services: Option[];
+  metrikaId: string;
+  defaultFormat?: string;
+  defaultService?: string;
+};
+
+const { site, contact, tariffs, services, metrikaId, defaultFormat = "", defaultService = "" } = Astro.props;
+---
+
+<Section class="pb-20 lg:pb-28" id="kontakty" tone="white">
+  <div class="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+    <div class="reveal">
+      <Badge>{contact.eyebrow}</Badge>
+      <h2 class="mt-4 text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">{contact.title}</h2>
+      <p class="mt-5 text-lg leading-8 text-[var(--color-muted)]">{contact.description}</p>
+      <div class="mt-8 grid gap-2 text-sm">
+        {
+          site.phones.map((phone) => (
+            <a class="font-medium hover:text-[var(--color-gold-deep)]" href={phone.href}>
+              {phone.label}: {phone.display}
+            </a>
+          ))
+        }
+        <a class="font-medium hover:text-[var(--color-gold-deep)]" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+      <div class="mt-8 grid gap-4">
+        {
+          contact.points.map((point) => (
+            <div class="flex items-start gap-3 text-sm font-medium">
+              <Icon name="spark" size={18} className="mt-0.5 text-[var(--color-gold-deep)]" />
+              <span>{point}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <div class="reveal">
+      <Card interactive={false} class="p-5 sm:p-7">
+        <ContactForm
+          client:visible
+          defaultFormat={defaultFormat}
+          defaultService={defaultService}
+          formTitle={contact.formTitle}
+          metrikaGoal={site.metrikaGoal}
+          metrikaId={metrikaId}
+          services={services}
+          submitLabel={contact.submitLabel}
+          successText={contact.successText}
+          successTitle={contact.successTitle}
+          tariffs={tariffs.map((item) => ({ slug: item.slug, name: item.name }))}
+        />
+        <noscript>
+          <p class="mt-4 text-sm text-[var(--color-muted)]">
+            Без JavaScript форма не отправится. Напишите на {site.email} или позвоните.
+          </p>
+        </noscript>
+      </Card>
+    </div>
+  </div>
+</Section>

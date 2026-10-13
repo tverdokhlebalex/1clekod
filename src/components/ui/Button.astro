@@ -1,0 +1,26 @@
+---
+import { buttonClass } from "@/lib/ui";
+
+type Props = {
+  href?: string;
+  variant?: "primary" | "secondary" | "ghost" | "glass";
+  size?: "md" | "lg";
+  class?: string;
+  type?: "button" | "submit";
+};
+
+const { href, variant = "primary", size = "md", class: className, type = "button" } = Astro.props;
+const classes = buttonClass({ variant, size, className });
+---
+
+{
+  href ? (
+    <a class={classes} href={href}>
+      <slot />
+    </a>
+  ) : (
+    <button class={classes} type={type}>
+      <slot />
+    </button>
+  )
+}

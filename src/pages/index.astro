@@ -1,0 +1,43 @@
+---
+import HomePage from "@/components/sections/HomePage.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getFaq, getHome, getSite } from "@/lib/content";
+
+const site = getSite();
+const home = getHome();
+const faq = getFaq();
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: site.name,
+    url: site.url,
+    email: site.email,
+    description: home.seo.description,
+    areaServed: "RU",
+    telephone: site.phones.map((phone) => phone.display),
+    address: site.addresses.map((address) => ({
+      "@type": "PostalAddress",
+      addressLocality: address.label,
+      streetAddress: address.value,
+      addressCountry: "RU"
+    }))
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer }
+    }))
+  }
+];
+---
+
+<BaseLayout description={home.seo.description} jsonLd={jsonLd} title={home.seo.title}>
+  <main id="main-content">
+    <HomePage />
+  </main>
+</BaseLayout>

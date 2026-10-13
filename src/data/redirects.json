@@ -1,0 +1,303 @@
+[
+  {
+    "from": "/obmen",
+    "to": "/uslugi/obmeny-1s",
+    "status": 301,
+    "enabled": true,
+    "comment": "Обмены данными 1С"
+  },
+  {
+    "from": "/nastroyka-dorabotka-1c",
+    "to": "/uslugi/soprovozhdenie-1s",
+    "status": 301,
+    "enabled": true,
+    "comment": "Настройка и доработка 1С"
+  },
+  {
+    "from": "/bitrix24",
+    "to": "/uslugi/integraciya-1s-bitriks24",
+    "status": 301,
+    "enabled": true,
+    "comment": "Битрикс24"
+  },
+  {
+    "from": "/integration",
+    "to": "/uslugi/obmeny-1s",
+    "status": 301,
+    "enabled": true,
+    "comment": "Интеграция 1С с сайтами, CRM и сервисами"
+  },
+  {
+    "from": "/integration_marketplaces",
+    "to": "/uslugi/obmeny-1s",
+    "status": 301,
+    "enabled": true,
+    "comment": "Интеграция с маркетплейсами"
+  },
+  {
+    "from": "/integration_platforms",
+    "to": "/uslugi/obmeny-1s",
+    "status": 301,
+    "enabled": true,
+    "comment": "Интеграционные платформы"
+  },
+  {
+    "from": "/web-services",
+    "to": "/uslugi/obmeny-1s",
+    "status": 301,
+    "enabled": true,
+    "comment": "Web-сервисы"
+  },
+  {
+    "from": "/sites",
+    "to": "/uslugi/sayty-i-1s",
+    "status": 301,
+    "enabled": true,
+    "comment": "Сайты"
+  },
+  {
+    "from": "/sklad",
+    "to": "/uslugi/avtomatizaciya-sklada",
+    "status": 301,
+    "enabled": true,
+    "comment": "Автоматизация склада"
+  },
+  {
+    "from": "/skladovka",
+    "to": "/uslugi/avtomatizaciya-sklada",
+    "status": 301,
+    "enabled": true,
+    "comment": "Склад ответственного хранения"
+  },
+  {
+    "from": "/sklad_instrument",
+    "to": "/uslugi/avtomatizaciya-sklada",
+    "status": 301,
+    "enabled": true,
+    "comment": "Складской инструмент"
+  },
+  {
+    "from": "/blog_sklad",
+    "to": "/uslugi/avtomatizaciya-sklada",
+    "status": 301,
+    "enabled": true,
+    "comment": "Материалы про склад"
+  },
+  {
+    "from": "/sistema_prodazh",
+    "to": "/uslugi/vnedrenie-1s",
+    "status": 301,
+    "enabled": true,
+    "comment": "Автоматизация учёта продаж"
+  },
+  {
+    "from": "/svertka",
+    "to": "/uslugi/audit-1s",
+    "status": 301,
+    "enabled": true,
+    "comment": "Свёртка базы"
+  },
+  {
+    "from": "/services_genearal",
+    "to": "/uslugi",
+    "status": 301,
+    "enabled": true,
+    "comment": "Общий список услуг"
+  },
+  {
+    "from": "/portfolio",
+    "to": "/keisy",
+    "status": 301,
+    "enabled": true,
+    "comment": "Портфолио"
+  },
+  {
+    "from": "/contacts",
+    "to": "/#kontakty",
+    "status": 301,
+    "enabled": true,
+    "comment": "Контакты"
+  },
+  {
+    "from": "/zayavka",
+    "to": "/#kontakty",
+    "status": 301,
+    "enabled": true,
+    "comment": "Заявка"
+  },
+  {
+    "from": "/about_lekod",
+    "to": "/#pochemu-my",
+    "status": 301,
+    "enabled": true,
+    "comment": "О компании"
+  },
+  {
+    "from": "/policy",
+    "to": "/privacy",
+    "status": 301,
+    "enabled": true,
+    "comment": "Политика"
+  },
+  {
+    "from": "/pers",
+    "to": "/privacy",
+    "status": 301,
+    "enabled": true,
+    "comment": "Персональные данные"
+  },
+  {
+    "from": "/kursi_obuchenie_1c1",
+    "to": "/uslugi",
+    "status": 301,
+    "enabled": false,
+    "comment": "Курсы. Страницу не переносили, редирект выключен."
+  },
+  {
+    "from": "/zapis_na_kurs",
+    "to": "/#kontakty",
+    "status": 301,
+    "enabled": false,
+    "comment": "Запись на курс. Редирект выключен."
+  },
+  {
+    "from": "/1c_mobile",
+    "to": "/uslugi",
+    "status": 301,
+    "enabled": false,
+    "comment": "Мобильные приложения. Отдельной страницы пока нет."
+  },
+  {
+    "from": "/prodaga_licenziy_1c",
+    "to": "/#kontakty",
+    "status": 301,
+    "enabled": false,
+    "comment": "Лицензии 1С. Редирект выключен, чтобы не смешивать с услугами."
+  },
+  {
+    "from": "/excel_1c",
+    "to": "/uslugi/soprovozhdenie-1s",
+    "status": 301,
+    "enabled": false,
+    "comment": "Excel и 1С. Включить, когда появится отдельный текст."
+  },
+  {
+    "from": "/perehod83",
+    "to": "/uslugi/vnedrenie-1s",
+    "status": 301,
+    "enabled": false,
+    "comment": "Переход на 8.3. Редирект выключен."
+  },
+  {
+    "from": "/chestniy_zank_ut10_3",
+    "to": "/uslugi/soprovozhdenie-1s",
+    "status": 301,
+    "enabled": false,
+    "comment": "Честный знак и УТ 10.3. Редирект выключен."
+  },
+  {
+    "from": "/vacancies",
+    "to": "/#kontakty",
+    "status": 301,
+    "enabled": false,
+    "comment": "Вакансии. Редирект выключен."
+  },
+  {
+    "from": "/vacancies_web",
+    "to": "/#kontakty",
+    "status": 301,
+    "enabled": false,
+    "comment": "Вакансии web. Редирект выключен."
+  },
+  {
+    "from": "/ai_for_business",
+    "to": "/",
+    "status": 301,
+    "enabled": false,
+    "comment": "ИИ для бизнеса. Редирект на главную выключен."
+  },
+  {
+    "from": "/iline",
+    "to": "/uslugi/soprovozhdenie-1s",
+    "status": 301,
+    "enabled": false,
+    "comment": "ILINE. Редирект выключен."
+  },
+  {
+    "from": "/success",
+    "to": "/",
+    "status": 301,
+    "enabled": false,
+    "comment": "Служебная страница успеха старой формы."
+  },
+  {
+    "from": "/programmist_finding",
+    "to": "/uslugi/soprovozhdenie-1s",
+    "status": 301,
+    "enabled": false,
+    "comment": "Подбор программиста. Редирект выключен."
+  },
+  {
+    "from": "/davidwoko",
+    "to": "/",
+    "status": 301,
+    "enabled": false,
+    "comment": "Служебный или устаревший адрес. Редирект выключен."
+  },
+  {
+    "from": "/page20579580.html",
+    "to": "/",
+    "status": 301,
+    "enabled": false,
+    "comment": "Старый адрес конструктора. Редирект выключен."
+  },
+  {
+    "from": "/page55061025.html",
+    "to": "/",
+    "status": 301,
+    "enabled": false,
+    "comment": "Старый адрес конструктора. Редирект выключен."
+  },
+  {
+    "from": "/page116607906.html",
+    "to": "/",
+    "status": 301,
+    "enabled": false,
+    "comment": "Старый адрес конструктора. Редирект выключен."
+  },
+  {
+    "from": "/11212",
+    "to": "/",
+    "status": 301,
+    "enabled": false,
+    "comment": "Неразобранный адрес. Редирект выключен."
+  },
+  {
+    "from": "/paser",
+    "to": "/",
+    "status": 301,
+    "enabled": false,
+    "comment": "Неразобранный адрес. Редирект выключен."
+  },
+  {
+    "from": "/translate",
+    "to": "/",
+    "status": 301,
+    "enabled": false,
+    "comment": "Неразобранный адрес. Редирект выключен."
+  },
+  {
+    "from": "/svedenie_mastering_music",
+    "to": "/",
+    "status": 301,
+    "enabled": false,
+    "comment": "Посторонний адрес. Редирект выключен."
+  },
+  {
+    "from": "/marketpalece_prez",
+    "to": "/uslugi/obmeny-1s",
+    "status": 301,
+    "enabled": false,
+    "comment": "Презентация маркетплейсов. Редирект выключен."
+  }
+]

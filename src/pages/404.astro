@@ -1,0 +1,19 @@
+---
+import Button from "@/components/ui/Button.astro";
+import Container from "@/components/ui/Container.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout description="Такой страницы нет. Перейдите к услугам или на главную." noindex title="Страница не найдена — Лёгкий код">
+  <main id="main-content">
+    <Container class="py-24">
+      <p class="text-sm font-semibold text-[var(--color-gold-deep)]">404</p>
+      <h1 class="mt-4 text-4xl font-semibold tracking-tight">Страница не найдена</h1>
+      <p class="mt-4 max-w-xl text-[var(--color-muted)]">Такой страницы нет. Если ссылка старая, откройте услуги или напишите нам.</p>
+      <div class="mt-8 flex gap-3">
+        <Button href="/">На главную</Button>
+        <Button href="/uslugi" variant="secondary">К услугам</Button>
+      </div>
+    </Container>
+  </main>
+</BaseLayout>

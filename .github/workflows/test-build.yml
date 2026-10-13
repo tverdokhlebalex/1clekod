@@ -1,0 +1,43 @@
+name: Тестовая сборка
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Проверка и сборка
+    runs-on: ubuntu-latest
+    steps:
+      - name: Код
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Зависимости
+        run: npm ci
+
+      - name: Схема CMS
+        run: npm run check:cms
+
+      - name: Типы
+        run: npm run check
+
+      - name: Сборка
+        run: npm run build
+        env:
+          PUBLIC_SITE_URL: https://1clekod.ru
+
+      - name: Артефакт тестовой сборки
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-site
+          path: dist
+          retention-days: 7
+          if-no-files-found: error

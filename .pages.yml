@@ -1,0 +1,1011 @@
+# Редактор сайта для Pages CMS. Подписи на русском, техническое имя поля не менять.
+settings:
+  content:
+    merge: true
+  commit:
+    identity: user
+    templates:
+      create: "Сайт: добавлен {filename}"
+      update: "Сайт: изменён {filename}"
+      delete: "Сайт: удалён {filename}"
+      rename: "Сайт: {oldFilename} переименован в {newFilename}"
+
+media:
+  input: public/media
+  output: /media
+
+components:
+  seo:
+    label: Продвижение в поиске
+    type: object
+    fields:
+      - name: title
+        label: SEO Title
+        type: string
+        description: Заголовок во вкладке браузера и в поисковой выдаче
+      - name: description
+        label: SEO Description
+        type: text
+        description: Короткий текст под ссылкой в поиске
+  button:
+    label: Кнопка
+    type: object
+    fields:
+      - name: label
+        label: Подпись на кнопке
+        type: string
+      - name: href
+        label: Куда ведёт
+        type: string
+        description: Например /#kontakty или /uslugi/obmeny-1s
+  icon:
+    label: Иконка
+    type: select
+    options:
+      values:
+        - { name: headset, label: Гарнитура }
+        - { name: wrench, label: Ключ }
+        - { name: arrow-left-right, label: Обмен }
+        - { name: plug, label: Подключение }
+        - { name: clipboard-check, label: Чеклист }
+        - { name: siren, label: Срочно }
+        - { name: globe, label: Сайт }
+        - { name: warehouse, label: Склад }
+        - { name: rocket, label: Запуск }
+        - { name: messages, label: Переписка }
+        - { name: shield, label: Защита }
+        - { name: timer, label: Таймер }
+        - { name: database, label: База }
+        - { name: file-check, label: Документ }
+        - { name: workflow, label: Процесс }
+        - { name: chart, label: График }
+        - { name: users, label: Команда }
+        - { name: badge, label: Знак }
+        - { name: gauge, label: Скорость }
+        - { name: building, label: Офис }
+        - { name: phone, label: Телефон }
+        - { name: mail, label: Почта }
+        - { name: spark, label: Искра }
+        - { name: search, label: Поиск }
+        - { name: boxes, label: Коробки }
+        - { name: link, label: Связь }
+        - { name: server, label: Сервер }
+        - { name: circle-dollar, label: Деньги }
+  textCard:
+    label: Карточка
+    type: object
+    fields:
+      - name: icon
+        label: Иконка
+        component: icon
+      - name: title
+        label: Заголовок
+        type: string
+      - name: text
+        label: Текст
+        type: text
+
+content:
+  - name: settings-group
+    label: Настройки
+    type: group
+    items:
+      - name: site
+        label: Настройки сайта
+        type: file
+        path: src/data/site.json
+        format: json
+        operations:
+          create: false
+          delete: false
+          rename: false
+        fields:
+          - name: name
+            label: Название компании
+            type: string
+            required: true
+          - name: logo
+            label: Логотип
+            type: image
+            description: Необязательно. Если поле пустое, на сайте остаётся фирменный знак из узлов.
+          - name: tagline
+            label: Короткая подпись под названием
+            type: string
+            required: true
+          - name: url
+            label: Адрес сайта
+            type: string
+          - name: locale
+            label: Язык для соцсетей
+            type: string
+            description: Оставьте ru_RU
+          - name: email
+            label: Электронная почта
+            type: string
+            required: true
+          - name: legalName
+            label: Юридическое имя
+            type: string
+            description: Например ИП или ООО. Пока пусто, в подвале будет только название.
+          - name: inn
+            label: ИНН
+            type: string
+          - name: ogrn
+            label: ОГРН или ОГРНИП
+            type: string
+          - name: city
+            label: Город
+            type: string
+          - name: headerButton
+            label: Кнопка в шапке
+            component: button
+          - name: nav
+            label: Пункты меню
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{label}"
+            fields:
+              - name: label
+                label: Название пункта
+                type: string
+              - name: href
+                label: Ссылка
+                type: string
+          - name: phones
+            label: Телефоны
+            type: object
+            list:
+              collapsible:
+                summary: "{label}"
+            fields:
+              - name: label
+                label: Подпись
+                type: string
+              - name: display
+                label: Как показать номер
+                type: string
+              - name: href
+                label: Ссылка для звонка
+                type: string
+                description: Начинается с tel:+7
+          - name: messengers
+            label: Мессенджеры
+            type: object
+            list: true
+            fields:
+              - name: label
+                label: Название
+                type: string
+              - name: display
+                label: Номер или имя
+                type: string
+              - name: href
+                label: Ссылка
+                type: string
+          - name: addresses
+            label: Адреса
+            type: object
+            list: true
+            fields:
+              - name: label
+                label: Город
+                type: string
+              - name: value
+                label: Адрес
+                type: string
+          - name: footerText
+            label: Текст в подвале
+            type: text
+            required: true
+          - name: cookieText
+            label: Текст про cookies
+            type: text
+          - name: metrikaId
+            label: Номер Яндекс Метрики
+            type: string
+            description: Только цифры. Если пусто, счётчик не подключается.
+          - name: metrikaGoal
+            label: Имя цели при отправке заявки
+            type: string
+            description: Такую же цель нужно создать в Метрике. По умолчанию lead_submit.
+          - name: yandexVerification
+            label: Код подтверждения Яндекса
+            type: string
+          - name: googleVerification
+            label: Код подтверждения Google
+            type: string
+          - name: ogImage
+            label: Картинка для соцсетей
+            type: image
+            description: Необязательно. Лучше широкий кадр без мелкого текста.
+          - name: seo
+            label: Описание сайта по умолчанию
+            type: object
+            fields:
+              - name: title
+                label: SEO Title по умолчанию
+                type: string
+              - name: description
+                label: SEO Description по умолчанию
+                type: text
+              - name: keywords
+                label: Ключевые слова
+                type: string
+                list: true
+
+      - name: redirects
+        label: Старые адреса. Не для ежедневной правки
+        type: file
+        path: src/data/redirects.json
+        format: json
+        operations:
+          delete: false
+        list: true
+        fields:
+          - name: from
+            label: Старый адрес
+            type: string
+            required: true
+            description: Как на старом сайте, например /obmen
+          - name: to
+            label: Новый адрес
+            type: string
+            required: true
+          - name: status
+            label: Код
+            type: number
+            description: Для постоянного переноса ставьте 301
+          - name: enabled
+            label: Включить редирект
+            type: boolean
+          - name: comment
+            label: Заметка для себя
+            type: string
+
+  - name: pages-group
+    label: Страницы
+    type: group
+    items:
+      - name: home
+        label: Главная страница
+        type: file
+        path: src/data/home.json
+        format: json
+        operations:
+          create: false
+          delete: false
+          rename: false
+        fields:
+          - name: seo
+            label: SEO главной
+            component: seo
+          - name: hero
+            label: Первый экран
+            type: object
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: titleBefore
+                label: Заголовок H1, начало
+                type: string
+                required: true
+              - name: titleAccent
+                label: Заголовок H1, выделенная фраза
+                type: string
+                required: true
+                description: Эта фраза подсвечивается жёлтым. Сейчас это «без хаоса».
+              - name: titleAfter
+                label: Заголовок H1, окончание
+                type: string
+                description: Можно оставить пустым.
+              - name: description
+                label: Подзаголовок
+                type: text
+                required: true
+              - name: primaryButton
+                label: Основная кнопка
+                component: button
+              - name: secondaryButton
+                label: Вторая кнопка
+                component: button
+              - name: stats
+                label: Три цифры
+                type: object
+                list:
+                  max: 3
+                  collapsible:
+                    summary: "{value}"
+                fields:
+                  - name: value
+                    label: Цифра
+                    type: string
+                  - name: label
+                    label: Пояснение
+                    type: string
+              - name: panel
+                label: Интерактивная панель
+                type: object
+                fields:
+                  - name: title
+                    label: Название панели
+                    type: string
+                  - name: status
+                    label: Статус
+                    type: string
+                  - name: noticeTitle
+                    label: Заголовок уведомления
+                    type: string
+                  - name: noticeText
+                    label: Текст уведомления
+                    type: text
+                  - name: rows
+                    label: Строки обменов
+                    type: object
+                    list: true
+                    fields:
+                      - name: title
+                        label: Название
+                        type: string
+                      - name: meta
+                        label: Пояснение
+                        type: string
+                      - name: state
+                        label: Состояние
+                        type: string
+                      - name: progress
+                        label: Заполнение, от 0 до 100
+                        type: number
+                  - name: lanes
+                    label: Цифры внутри панели
+                    type: object
+                    list: true
+                    fields:
+                      - name: label
+                        label: Подпись
+                        type: string
+                      - name: value
+                        label: Значение
+                        type: string
+                  - name: taskTitle
+                    label: Заголовок задачи
+                    type: string
+                  - name: taskText
+                    label: Текст задачи
+                    type: text
+                  - name: channels
+                    label: Подключённые системы
+                    type: object
+                    list: true
+                    fields:
+                      - name: label
+                        label: Название
+                        type: string
+                      - name: icon
+                        label: Иконка
+                        component: icon
+          - name: problems
+            label: Блок проблем
+            type: object
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Описание
+                type: text
+              - name: items
+                label: Карточки
+                type: object
+                list: true
+                fields:
+                  - name: icon
+                    label: Иконка
+                    component: icon
+                  - name: title
+                    label: Заголовок
+                    type: string
+                  - name: text
+                    label: Текст
+                    type: text
+          - name: areas
+            label: Блок «что закрываем»
+            type: object
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Описание
+                type: text
+              - name: items
+                label: Карточки
+                type: object
+                list: true
+                fields:
+                  - name: icon
+                    label: Иконка
+                    component: icon
+                  - name: title
+                    label: Заголовок
+                    type: string
+                  - name: text
+                    label: Текст
+                    type: text
+          - name: services
+            label: Заголовок блока услуг
+            type: object
+            description: Сами карточки правятся в разделе «Услуги»
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Описание
+                type: text
+          - name: integrations
+            label: Блок связок
+            type: object
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Описание
+                type: text
+              - name: items
+                label: Карточки связок
+                type: object
+                list: true
+                fields:
+                  - name: icon
+                    label: Иконка
+                    component: icon
+                  - name: title
+                    label: Заголовок
+                    type: string
+                  - name: tag
+                    label: Плашка
+                    type: string
+                  - name: text
+                    label: Текст
+                    type: text
+                  - name: outcome
+                    label: Результат
+                    type: text
+                  - name: href
+                    label: Ссылка
+                    type: string
+                  - name: layout
+                    label: Размер карточки
+                    type: select
+                    options:
+                      values:
+                        - { name: featured, label: Крупная }
+                        - { name: tall, label: Высокая }
+                        - { name: default, label: Обычная }
+                        - { name: banner, label: На всю ширину }
+          - name: process
+            label: Блок «как работаем»
+            type: object
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Описание
+                type: text
+              - name: sideBadge
+                label: Плашка сбоку
+                type: string
+              - name: sideTitle
+                label: Заголовок боковой карточки
+                type: string
+              - name: sideText
+                label: Текст боковой карточки
+                type: text
+              - name: sideNote
+                label: Заметка в боковой карточке
+                type: string
+              - name: button
+                label: Кнопка
+                component: button
+              - name: steps
+                label: Этапы
+                type: object
+                list:
+                  collapsible:
+                    summary: "{title}"
+                fields:
+                  - name: number
+                    label: Номер
+                    type: string
+                  - name: icon
+                    label: Иконка
+                    component: icon
+                  - name: title
+                    label: Название
+                    type: string
+                  - name: text
+                    label: Описание
+                    type: text
+                  - name: deliverable
+                    label: Что получает клиент
+                    type: text
+          - name: tariffs
+            label: Заголовок блока форматов
+            type: object
+            description: Сами тарифы правятся в разделе «Тарифы»
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Описание
+                type: text
+          - name: tasks
+            label: Типовые задачи
+            type: object
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Описание
+                type: text
+              - name: items
+                label: Список задач
+                type: string
+                list: true
+          - name: reasons
+            label: Почему мы
+            type: object
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Описание
+                type: text
+              - name: items
+                label: Карточки
+                type: object
+                list: true
+                fields:
+                  - name: icon
+                    label: Иконка
+                    component: icon
+                  - name: title
+                    label: Заголовок
+                    type: string
+                  - name: text
+                    label: Текст
+                    type: text
+          - name: related
+            label: Заголовок смежных услуг
+            type: object
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Описание
+                type: text
+          - name: cases
+            label: Заголовок сценариев
+            type: object
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Описание
+                type: text
+              - name: button
+                label: Кнопка
+                component: button
+          - name: faq
+            label: Заголовок вопросов
+            type: object
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Описание
+                type: text
+          - name: cta
+            label: Призыв перед заявкой
+            type: object
+            fields:
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Текст
+                type: text
+              - name: primaryButton
+                label: Основная кнопка
+                component: button
+              - name: secondaryButton
+                label: Вторая кнопка
+                component: button
+          - name: contact
+            label: Блок заявки
+            type: object
+            fields:
+              - name: eyebrow
+                label: Надзаголовок
+                type: string
+              - name: title
+                label: Заголовок
+                type: string
+              - name: description
+                label: Текст
+                type: text
+              - name: points
+                label: Пункты слева от формы
+                type: string
+                list: true
+              - name: formTitle
+                label: Заголовок формы
+                type: string
+              - name: submitLabel
+                label: Подпись кнопки отправки
+                type: string
+              - name: successTitle
+                label: Заголовок после отправки
+                type: string
+              - name: successText
+                label: Текст после отправки
+                type: text
+
+      - name: legal
+        label: Документы
+        type: collection
+        path: src/content/legal
+        format: yaml-frontmatter
+        operations:
+          create: false
+          delete: false
+          rename: false
+        filename:
+          template: "{fields.slug}.md"
+          field: create
+        fields:
+          - name: title
+            label: Заголовок
+            type: string
+            required: true
+          - name: slug
+            label: Адрес страницы
+            type: string
+            required: true
+            readonly: true
+            description: privacy, consent или cookies. Адрес этих страниц менять нельзя.
+            pattern: "^[a-z0-9-]+$"
+          - name: description
+            label: Короткое пояснение
+            type: text
+          - name: seoTitle
+            label: SEO Title
+            type: string
+          - name: seoDescription
+            label: SEO Description
+            type: text
+          - name: body
+            label: Текст документа
+            type: rich-text
+
+  - name: catalog-group
+    label: Каталог
+    type: group
+    items:
+      - name: services
+        label: Услуги
+        type: collection
+        path: src/content/services
+        format: yaml-frontmatter
+        operations:
+          delete: false
+          rename: false
+        view:
+          primary: title
+          sort: order
+          order: asc
+          fields:
+            - title
+            - published
+            - featuredOnHome
+            - order
+        filename:
+          template: "{fields.slug}.md"
+          field: create
+        fields:
+          - name: title
+            label: Название услуги
+            type: string
+            required: true
+          - name: slug
+            label: Адрес страницы
+            type: string
+            required: true
+            description: "Латиницей через дефис, например obmeny-1s. Страница откроется как /uslugi/этот-адрес. Уже опубликованный адрес лучше не менять: сломаются старые ссылки."
+            pattern: "^[a-z0-9-]+$"
+          - name: tag
+            label: Плашка
+            type: string
+          - name: summary
+            label: Краткое описание
+            type: text
+            required: true
+          - name: outcome
+            label: Результат на карточке
+            type: text
+          - name: heroLead
+            label: Текст на первом экране страницы
+            type: text
+          - name: group
+            label: Где показать на главной
+            type: select
+            options:
+              values:
+                - { name: primary, label: В основном блоке услуг }
+                - { name: related, label: Ниже, в смежных услугах }
+          - name: layout
+            label: Размер карточки в основном блоке
+            type: select
+            options:
+              values:
+                - { name: featured, label: Крупная }
+                - { name: tall, label: Высокая }
+                - { name: default, label: Обычная }
+                - { name: banner, label: На всю ширину }
+          - name: icon
+            label: Иконка
+            component: icon
+          - name: order
+            label: Порядок
+            type: number
+            description: Меньше число — выше в списке
+          - name: published
+            label: Показывать на сайте
+            type: boolean
+          - name: featuredOnHome
+            label: Показывать на главной
+            type: boolean
+          - name: cover
+            label: Обложка
+            type: image
+            description: Необязательно. На главной карточки и так собираются из иконок.
+          - name: seoTitle
+            label: SEO Title
+            type: string
+            required: true
+          - name: seoDescription
+            label: SEO Description
+            type: text
+            required: true
+          - name: primaryButton
+            label: Основная кнопка
+            component: button
+          - name: secondaryButton
+            label: Вторая кнопка
+            component: button
+          - name: benefits
+            label: Что получает клиент
+            type: object
+            list:
+              collapsible:
+                summary: "{title}"
+            fields:
+              - name: title
+                label: Заголовок
+                type: string
+              - name: text
+                label: Текст
+                type: text
+          - name: steps
+            label: Шаги
+            type: object
+            list:
+              collapsible:
+                summary: "{title}"
+            fields:
+              - name: title
+                label: Заголовок
+                type: string
+              - name: text
+                label: Текст
+                type: text
+          - name: faq
+            label: Вопросы по услуге
+            type: object
+            list:
+              collapsible:
+                summary: "{question}"
+            fields:
+              - name: question
+                label: Вопрос
+                type: string
+              - name: answer
+                label: Ответ
+                type: text
+          - name: body
+            label: Подробное описание
+            type: rich-text
+            required: true
+
+      - name: tariffs
+        label: Тарифы
+        type: file
+        path: src/data/tariffs.json
+        format: json
+        list: true
+        operations:
+          delete: false
+        fields:
+          - name: name
+            label: Название
+            type: string
+            required: true
+          - name: slug
+            label: Код формата
+            type: string
+            description: Нужен, чтобы кнопка открывала форму с выбранным форматом
+          - name: price
+            label: Цена
+            type: string
+            description: Необязательно. Оставьте пустым, пока сумму не согласовали. На карточке тогда остаётся подпись ниже.
+          - name: priceLabel
+            label: Подпись, если цены ещё нет
+            type: string
+            required: true
+            description: Например «по оценке», «пакеты часов» или «по этапам».
+          - name: priceNote
+            label: Пояснение под ценой
+            type: text
+          - name: description
+            label: Описание
+            type: text
+          - name: features
+            label: Что входит
+            type: string
+            list: true
+          - name: hourPacks
+            label: Пакеты часов
+            type: string
+            list: true
+            description: Только для сопровождения. Например 10 часов.
+          - name: accent
+            label: Выделить карточку
+            type: boolean
+          - name: order
+            label: Порядок
+            type: number
+          - name: button
+            label: Кнопка
+            component: button
+
+      - name: faq
+        label: FAQ
+        type: file
+        path: src/data/faq.json
+        format: json
+        list: true
+        operations:
+          delete: false
+        fields:
+          - name: question
+            label: Вопрос
+            type: string
+            required: true
+          - name: answer
+            label: Ответ
+            type: text
+            required: true
+          - name: order
+            label: Порядок
+            type: number
+
+      - name: cases
+        label: Кейсы
+        type: collection
+        path: src/content/cases
+        format: yaml-frontmatter
+        operations:
+          delete: false
+          rename: false
+        view:
+          primary: title
+          sort: order
+          order: asc
+          fields:
+            - title
+            - published
+            - industry
+            - order
+        filename:
+          template: "{fields.slug}.md"
+          field: create
+        fields:
+          - name: title
+            label: Заголовок
+            type: string
+            required: true
+          - name: slug
+            label: Адрес
+            type: string
+            required: true
+            pattern: "^[a-z0-9-]+$"
+            description: Страница откроется как /keisy/этот-адрес
+          - name: client
+            label: Клиент
+            type: string
+            description: Название только если клиент разрешил. Иначе отрасль или «не публикуем».
+          - name: industry
+            label: Отрасль
+            type: string
+          - name: summary
+            label: Коротко
+            type: text
+          - name: result
+            label: Чем закончилось
+            type: text
+          - name: serviceSlug
+            label: Связанная услуга
+            type: string
+            description: Адрес услуги без /uslugi/, например obmeny-1s
+          - name: order
+            label: Порядок
+            type: number
+          - name: published
+            label: Показывать
+            type: boolean
+          - name: cover
+            label: Обложка
+            type: image
+          - name: seoTitle
+            label: SEO Title
+            type: string
+          - name: seoDescription
+            label: SEO Description
+            type: text
+          - name: body
+            label: История
+            type: rich-text

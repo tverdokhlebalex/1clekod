@@ -1,0 +1,23 @@
+---
+type Props = {
+  tone?: "gold" | "light" | "ink";
+  class?: string;
+};
+
+const { tone = "gold", class: className } = Astro.props;
+const tones = {
+  gold: "border-[rgb(245_184_0_/_0.45)] bg-[var(--color-gold-soft)] text-[var(--color-gold-deep)]",
+  light: "border-[var(--color-line)] bg-white text-[var(--color-ink)]",
+  ink: "border-white/20 bg-white/10 text-white"
+};
+---
+
+<span
+  class:list={[
+    "inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold",
+    tones[tone],
+    className
+  ]}
+>
+  <slot />
+</span>

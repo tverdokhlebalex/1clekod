@@ -1,0 +1,320 @@
+@import "tailwindcss";
+
+:root {
+  --color-page: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-soft: #eef2ff;
+  --color-ink: #111827;
+  --color-muted: #64748b;
+  --color-subtle: #64748b;
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e1;
+  --color-gold: #ffd43b;
+  --color-amber: #f5b800;
+  --color-gold-deep: #8a6200;
+  --color-gold-soft: #fff8d6;
+  --color-blue: #4d6bff;
+  --color-blue-soft: #eef2ff;
+  --color-primary: #8a6200;
+  --color-primary-dark: #6e4e00;
+
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  --shadow-xs: 0 1px 2px rgb(17 24 39 / 0.06);
+  --shadow-sm: 0 10px 28px rgb(17 24 39 / 0.06);
+  --shadow-md: 0 16px 40px rgb(17 24 39 / 0.08);
+  --shadow-lg: 0 28px 70px rgb(17 24 39 / 0.16);
+  --shadow-glow: 0 0 0 1px rgb(245 184 0 / 0.28), 0 18px 50px rgb(77 107 255 / 0.12);
+  --shadow-focus: 0 0 0 4px rgb(255 212 59 / 0.45);
+
+  --gradient-brand: linear-gradient(135deg, #ffe58a 0%, #ffd43b 46%, #f5b800 100%);
+  --gradient-brand-soft: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  --gradient-hero:
+    radial-gradient(circle at 16% 12%, rgb(255 212 59 / 0.34), transparent 32%),
+    radial-gradient(circle at 82% 18%, rgb(77 107 255 / 0.18), transparent 34%),
+    radial-gradient(circle at 68% 88%, rgb(245 184 0 / 0.16), transparent 36%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 78%);
+  --gradient-card: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  --gradient-line: linear-gradient(90deg, transparent, rgb(77 107 255 / 0.2), #ffd43b, rgb(77 107 255 / 0.85), transparent);
+  --gradient-edge: linear-gradient(135deg, #ffe58a, #ffd43b 46%, #f5b800);
+  --gradient-cta: linear-gradient(145deg, #152652 0%, #0c1633 48%, #10182e 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: clip;
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(255 212 59 / 0.55);
+  color: var(--color-ink);
+}
+
+a,
+button,
+input,
+textarea,
+select {
+  outline-color: var(--color-gold);
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 100;
+  border-radius: var(--radius-md);
+  background: var(--color-ink);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.625rem 1rem;
+}
+
+.skip-link:focus-visible {
+  top: 1rem;
+  box-shadow: var(--shadow-focus);
+}
+
+.hp {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .packet,
+  .scan-line,
+  .gold-sheen::after,
+  .dash-flow,
+  .status-ping {
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 22%;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(1rem);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes sheen {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes packet {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(100cqi - 0.55rem));
+  }
+}
+
+@keyframes scan {
+  from {
+    transform: translateY(-120%);
+  }
+  to {
+    transform: translateY(320%);
+  }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .surface-grid {
+    background-image: radial-gradient(rgb(17 24 39 / 0.16) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .brand-mark {
+    background-image: linear-gradient(#ffd43b, #ffd43b);
+    background-repeat: no-repeat;
+    background-size: 100% 0.42em;
+    background-position: 0 88%;
+  }
+
+  .bg-brand {
+    background-color: #f0c84a;
+    background-image: var(--gradient-brand);
+  }
+
+  .bg-brand-soft {
+    background-color: #fff8e4;
+    background-image: var(--gradient-brand-soft);
+  }
+
+  .bg-gradient-card {
+    background-color: #ffffff;
+    background-image: var(--gradient-card);
+  }
+
+  .bg-gradient-line {
+    background-image: var(--gradient-line);
+  }
+
+  .bg-gradient-cta {
+    background-image: var(--gradient-cta);
+  }
+
+  .bg-hero {
+    background-color: #f8fafc;
+    background-image: var(--gradient-hero);
+  }
+
+  .card-gradient-border {
+    position: relative;
+    background:
+      linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+      var(--gradient-edge) border-box;
+    border: 1px solid transparent;
+  }
+
+  .packet {
+    animation: packet 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+
+  .scan-line {
+    animation: scan 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+
+  .dash-flow {
+    stroke-dasharray: 5 8;
+    animation: dash 1.6s linear infinite;
+  }
+
+  .status-ping {
+    animation: ping 1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+
+  .gold-sheen {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gold-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.45), transparent);
+    animation: sheen 4.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .richtext h2,
+  .richtext h3 {
+    margin-top: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+
+  .richtext h2 {
+    font-size: 1.5rem;
+  }
+
+  .richtext h3 {
+    font-size: 1.2rem;
+  }
+
+  .richtext p,
+  .richtext li {
+    color: var(--color-muted);
+  }
+
+  .richtext p {
+    margin-top: 0.9rem;
+  }
+
+  .richtext ul,
+  .richtext ol {
+    margin-top: 0.9rem;
+    padding-left: 1.2rem;
+  }
+
+  .richtext ul {
+    list-style: disc;
+  }
+
+  .richtext ol {
+    list-style: decimal;
+  }
+
+  .richtext a {
+    color: var(--color-gold-deep);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}

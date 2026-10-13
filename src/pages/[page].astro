@@ -1,0 +1,38 @@
+---
+import { render } from "astro:content";
+import Container from "@/components/ui/Container.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getLegalPages, getSite } from "@/lib/content";
+
+export async function getStaticPaths() {
+  const pages = await getLegalPages();
+  return pages.map((page) => ({ params: { page: page.data.slug } }));
+}
+
+const { page: pageId } = Astro.params;
+const pages = await getLegalPages();
+const page = pages.find((item) => item.data.slug === pageId);
+if (!page) throw new Error(`Документ не найден: ${pageId}`);
+const { Content } = await render(page);
+const site = getSite();
+const requisites = [site.legalName, site.inn && `ИНН ${site.inn}`, site.ogrn && `ОГРН ${site.ogrn}`, site.city].filter(Boolean);
+---
+
+<BaseLayout description={page.data.seoDescription} title={page.data.seoTitle}>
+  <main id="main-content">
+    <Container class="py-16 sm:py-20">
+      <article class="richtext max-w-3xl">
+        <h1 class="text-4xl font-semibold tracking-tight text-[var(--color-ink)]">{page.data.title}</h1>
+        <p class="text-lg">{page.data.description}</p>
+        <Content />
+      </article>
+      <aside class="mt-10 max-w-3xl rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-white p-5 text-sm leading-6">
+        <p class="font-semibold">Контакты по вопросам данных</p>
+        <p class="mt-2 text-[var(--color-muted)]">{site.name}{requisites.length ? `, ${requisites.join(", ")}` : ""}</p>
+        <p class="mt-2"><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        {site.phones.map((phone) => <p><a href={phone.href}>{phone.display}</a> · {phone.label}</p>)}
+        {site.addresses.map((address) => <p class="text-[var(--color-muted)]">{address.label}: {address.value}</p>)}
+      </aside>
+    </Container>
+  </main>
+</BaseLayout>

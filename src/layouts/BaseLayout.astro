@@ -1,0 +1,108 @@
+---
+import "@fontsource-variable/inter";
+import "@/styles/global.css";
+import Footer from "@/components/layout/Footer.astro";
+import { CookieBanner } from "@/components/islands/CookieBanner";
+import { Header } from "@/components/islands/Header";
+import { getSite, metrikaId } from "@/lib/content";
+
+type Props = {
+  title: string;
+  description: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
+};
+
+const { title, description, noindex = false, jsonLd = [] } = Astro.props;
+const site = getSite();
+const origin = Astro.site ?? new URL(site.url);
+const canonical = new URL(Astro.url.pathname, origin);
+const counter = metrikaId(site);
+const showMetrika = /^\d+$/.test(counter);
+const image = site.ogImage ? new URL(site.ogImage, origin).href : "";
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f8fafc" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={site.seo.keywords.join(", ")} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large"} />
+    {site.yandexVerification && <meta name="yandex-verification" content={site.yandexVerification} />}
+    {site.googleVerification && <meta name="google-site-verification" content={site.googleVerification} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {jsonLd.map((item) => <script is:inline set:html={JSON.stringify(item)} type="application/ld+json" />)}
+    <script is:inline>
+      (function () {
+        var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "yclid"];
+        var params = new URLSearchParams(location.search);
+        var found = {};
+        keys.forEach(function (key) {
+          var value = params.get(key);
+          if (value) found[key] = value.slice(0, 120);
+        });
+        if (!Object.keys(found).length) return;
+        found.landing = location.pathname;
+        try {
+          sessionStorage.setItem("lekod-attribution", JSON.stringify(found));
+        } catch (error) {
+          /* хранилище может быть закрыто */
+        }
+      })();
+    </script>
+    {
+      showMetrika && (
+        <script is:inline define:vars={{ counter: Number(counter) }}>
+          (function (m, e, t, r, i, k, a) {
+            m[i] =
+              m[i] ||
+              function () {
+                (m[i].a = m[i].a || []).push(arguments);
+              };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) {
+              if (document.scripts[j].src === r) return;
+            }
+            k = e.createElement(t);
+            a = e.getElementsByTagName(t)[0];
+            k.async = 1;
+            k.src = r;
+            a.parentNode.insertBefore(k, a);
+          })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+          ym(counter, "init", { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true });
+        </script>
+      )
+    }
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Перейти к содержимому</a>
+    <Header client:load cta={site.headerButton} logo={site.logo} name={site.name} nav={site.nav} tagline={site.tagline} />
+    <slot />
+    <Footer />
+    <CookieBanner client:idle text={site.cookieText} />
+    {
+      showMetrika && (
+        <noscript>
+          <div>
+            <img src={`https://mc.yandex.ru/watch/${counter}`} alt="" style="position:absolute;left:-9999px" />
+          </div>
+        </noscript>
+      )
+    }
+  </body>
+</html>

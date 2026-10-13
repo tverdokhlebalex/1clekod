@@ -1,0 +1,13 @@
+---
+type Props = { class?: string };
+const { class: className } = Astro.props;
+---
+
+<span
+  class:list={[
+    "grid size-12 shrink-0 place-items-center rounded-[var(--radius-md)] bg-brand text-[var(--color-ink)] shadow-[var(--shadow-sm)]",
+    className
+  ]}
+>
+  <slot />
+</span>

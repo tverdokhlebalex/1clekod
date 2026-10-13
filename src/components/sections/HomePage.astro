@@ -1,0 +1,297 @@
+---
+import { ArrowRight, Check } from "lucide-react";
+import ContactSection from "@/components/sections/ContactSection.astro";
+import { BentoVisual } from "@/components/islands/BentoVisual";
+import { HeroPanel } from "@/components/islands/HeroPanel";
+import { IntegrationMap } from "@/components/islands/IntegrationMap";
+import { ProcessTimeline } from "@/components/islands/ProcessTimeline";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Card from "@/components/ui/Card.astro";
+import Container from "@/components/ui/Container.astro";
+import Section from "@/components/ui/Section.astro";
+import { Icon } from "@/components/ui/Icon";
+import { getCases, getFaq, getHome, getServices, getSite, getTariffs, metrikaId } from "@/lib/content";
+import type { BentoLayout } from "@/lib/icons";
+
+const home = getHome();
+const site = getSite();
+const services = await getServices();
+const cases = await getCases();
+const faq = getFaq();
+const tariffs = getTariffs();
+const counter = metrikaId(site);
+const primary = services.filter((item) => item.data.group === "primary" && item.data.featuredOnHome);
+const related = services.filter((item) => item.data.group === "related" && item.data.featuredOnHome);
+const serviceOptions = services.map((item) => ({ slug: item.data.slug, name: item.data.title }));
+
+const layoutClasses: Record<BentoLayout, string> = {
+  featured: "md:col-span-2 lg:col-span-7",
+  tall: "md:col-span-2 lg:col-span-5",
+  default: "lg:col-span-6",
+  banner: "md:col-span-2 lg:col-span-12"
+};
+
+const visuals = {
+  "soprovozhdenie-1s": "queue",
+  "obmeny-1s": "exchange",
+  "integraciya-1s-bitriks24": "deal",
+  "audit-1s": "audit",
+  "srochnaya-pomoshch-1s": "urgent"
+} as const;
+---
+
+<section class="bg-hero relative isolate overflow-hidden">
+  <div class="pointer-events-none absolute -left-16 top-8 h-72 w-[32rem] rounded-full bg-[rgb(255_212_59_/_0.38)] blur-3xl"></div>
+  <div class="pointer-events-none absolute -right-10 top-10 h-80 w-[34rem] rounded-full bg-[rgb(77_107_255_/_0.22)] blur-3xl"></div>
+  <div class="surface-grid absolute inset-0 opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent_78%)]"></div>
+  <Container class="relative grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:py-20">
+    <div>
+      <Badge tone="light">{home.hero.eyebrow}</Badge>
+      <h1 class="mt-5 text-balance text-[2rem] font-semibold leading-[1.08] tracking-tight sm:text-[2.6rem] lg:text-[3.15rem]">
+        {home.hero.titleBefore}<span class="brand-mark">{home.hero.titleAccent}</span>{home.hero.titleAfter}
+      </h1>
+      <p class="mt-5 max-w-xl text-pretty text-base leading-7 text-[var(--color-muted)] sm:text-lg">{home.hero.description}</p>
+      <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+        <Button href={home.hero.primaryButton.href} size="lg">
+          {home.hero.primaryButton.label}
+          <ArrowRight aria-hidden size={18} />
+        </Button>
+        <Button href={home.hero.secondaryButton.href} size="lg" variant="secondary">{home.hero.secondaryButton.label}</Button>
+      </div>
+      <dl class="mt-8 grid gap-4 border-t border-[var(--color-line)] pt-5 sm:grid-cols-3">
+        {
+          home.hero.stats.map((stat) => (
+            <div>
+              <dt class="text-sm leading-5 text-[var(--color-muted)]">{stat.label}</dt>
+              <dd class="mt-1 text-lg font-semibold tracking-tight">{stat.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+    <HeroPanel client:visible panel={home.hero.panel} />
+  </Container>
+</section>
+
+<Section description={home.problems.description} eyebrow={home.problems.eyebrow} title={home.problems.title}>
+  <div class="grid gap-8 md:grid-cols-3">
+    {
+      home.problems.items.map((item) => (
+        <article class="border-t-2 border-[var(--color-ink)] pt-5">
+          <h3 class="text-xl font-semibold">{item.title}</h3>
+          <p class="mt-3 text-sm leading-6 text-[var(--color-muted)]">{item.text}</p>
+        </article>
+      ))
+    }
+  </div>
+</Section>
+
+<Section description={home.areas.description} eyebrow={home.areas.eyebrow} title={home.areas.title} tone="white">
+  <div class="grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      home.areas.items.map((item) => (
+        <div class="flex gap-3">
+          <span class="mt-0.5 grid size-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-[#111827] text-[#ffd43b]">
+            <Icon name={item.icon} size={18} />
+          </span>
+          <div>
+            <h3 class="font-semibold">{item.title}</h3>
+            <p class="mt-1 text-sm leading-6 text-[var(--color-muted)]">{item.text}</p>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</Section>
+
+<Section description={home.services.description} eyebrow={home.services.eyebrow} id="uslugi" title={home.services.title}>
+  <div class="grid auto-rows-auto gap-4 md:grid-cols-2 lg:grid-cols-12">
+    {
+      primary.map((item) => {
+        const kind = visuals[item.data.slug as keyof typeof visuals];
+        const inverse = kind === "urgent";
+        const featured = item.data.layout === "featured";
+        return (
+          <div class:list={["h-full", layoutClasses[item.data.layout]]}>
+            <Card class:list={["flex h-full flex-col", (featured || inverse) && "lg:flex-row lg:items-center lg:gap-8"]} href={`/uslugi/${item.data.slug}`} tone={featured ? "featured" : inverse ? "inverse" : "default"}>
+              <div class="flex min-w-0 flex-1 flex-col">
+                <div class="flex items-start justify-between gap-4">
+                  <Badge tone={inverse ? "ink" : "gold"}>{item.data.tag}</Badge>
+                </div>
+                <h3 class:list={["mt-4 font-semibold", item.data.layout === "featured" ? "text-2xl sm:text-3xl" : "text-xl"]}>{item.data.title}</h3>
+                <p class:list={["mt-3 text-sm leading-6", inverse ? "text-white/75" : "text-[var(--color-muted)]"]}>{item.data.summary}</p>
+                <p class:list={["mt-3 text-sm font-medium", inverse ? "text-[#ffd43b]" : "text-[var(--color-gold-deep)]"]}>{item.data.outcome}</p>
+                <span class="mt-5 inline-flex items-center gap-2 text-sm font-semibold">
+                  Подробнее <ArrowRight aria-hidden size={16} />
+                </span>
+              </div>
+              {kind && (
+                <div class:list={["mt-6", item.data.layout === "featured" && "lg:mt-0 lg:w-[46%]", inverse && "mt-0 lg:max-w-sm"]}>
+                  <BentoVisual client:visible kind={kind} />
+                </div>
+              )}
+            </Card>
+          </div>
+        );
+      })
+    }
+  </div>
+</Section>
+
+<Section description={home.integrations.description} eyebrow={home.integrations.eyebrow} id="svyazki" title={home.integrations.title} tone="dark">
+  <div class="pointer-events-none absolute left-1/2 top-24 h-64 w-64 -translate-x-1/2 rounded-full bg-[rgb(77_107_255_/_0.18)] blur-3xl"></div>
+  <div class="pointer-events-none absolute right-10 top-16 h-40 w-40 rounded-full bg-[rgb(255_212_59_/_0.16)] blur-3xl"></div>
+  <IntegrationMap client:visible items={home.integrations.items} />
+</Section>
+
+<Section description={home.process.description} eyebrow={home.process.eyebrow} id="kak-rabotaem" title={home.process.title} tone="white">
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,300px)_1fr] lg:gap-14">
+    <div>
+      <Card class="lg:sticky lg:top-24" interactive={false} tone="featured">
+        <Badge>{home.process.sideBadge}</Badge>
+        <h3 class="mt-4 text-2xl font-semibold">{home.process.sideTitle}</h3>
+        <p class="mt-3 text-sm leading-6 text-[var(--color-muted)]">{home.process.sideText}</p>
+        <p class="mt-6 rounded-[var(--radius-md)] bg-[var(--color-page)] px-4 py-3 text-sm">{home.process.sideNote}</p>
+        <Button class="mt-6" href={home.process.button.href}>{home.process.button.label}</Button>
+      </Card>
+    </div>
+    <ProcessTimeline client:visible steps={home.process.steps} />
+  </div>
+</Section>
+
+<Section description={home.tariffs.description} eyebrow={home.tariffs.eyebrow} id="tarify" title={home.tariffs.title}>
+  <div class="grid gap-5 lg:grid-cols-3">
+    {
+      tariffs.map((item) => (
+        <Card class="flex h-full flex-col" interactive={false} tone={item.accent ? "featured" : "default"}>
+          {item.accent && <Badge>Основной формат</Badge>}
+          <h3 class:list={["text-2xl font-semibold", item.accent && "mt-5"]}>{item.name}</h3>
+          <p class="mt-2 text-3xl font-semibold tracking-tight">{item.price || item.priceLabel}</p>
+          <p class="mt-4 text-sm leading-6 text-[var(--color-muted)]">{item.description}</p>
+          {
+            item.hourPacks.length > 0 && (
+              <div class="mt-5 flex flex-wrap gap-2">
+                {item.hourPacks.map((pack) => (
+                  <span class="rounded-full bg-[var(--color-ink)] px-3 py-1 text-xs font-semibold text-[#ffd43b]">
+                    {pack}
+                  </span>
+                ))}
+              </div>
+            )
+          }
+          <div class="mt-6 grid flex-1 gap-3">
+            {item.features.map((feature) => (
+              <div class="flex items-start gap-3 text-sm">
+                <Check aria-hidden className="mt-0.5 shrink-0 text-[var(--color-gold-deep)]" size={18} />
+                <span>{feature}</span>
+              </div>
+            ))}
+          </div>
+          <p class="mt-4 text-sm text-[var(--color-muted)]">{item.priceNote}</p>
+          <Button class="mt-6" href={item.button.href} variant={item.accent ? "primary" : "secondary"}>
+            {item.button.label}
+          </Button>
+        </Card>
+      ))
+    }
+  </div>
+</Section>
+
+<Section description={home.tasks.description} eyebrow={home.tasks.eyebrow} title={home.tasks.title} tone="white">
+  <ul class="grid gap-x-10 md:grid-cols-2">
+    {
+      home.tasks.items.map((task, index) => (
+        <li class="flex gap-4 border-t border-[var(--color-line)] py-4 text-sm leading-6">
+          <span class="font-semibold text-[var(--color-gold-deep)]">{String(index + 1).padStart(2, "0")}</span>
+          <span>{task}</span>
+        </li>
+      ))
+    }
+  </ul>
+</Section>
+
+<Section description={home.reasons.description} eyebrow={home.reasons.eyebrow} id="pochemu-my" title={home.reasons.title} tone="dark">
+  <div class="grid gap-4 md:grid-cols-2">
+    {
+      home.reasons.items.map((item) => (
+        <article class="rounded-[var(--radius-lg)] border border-white/10 bg-white/[0.04] p-5">
+          <h3 class="text-lg font-semibold">{item.title}</h3>
+          <p class="mt-2 text-sm leading-6 text-white/75">{item.text}</p>
+        </article>
+      ))
+    }
+  </div>
+</Section>
+
+{
+  related.length > 0 && (
+    <Section description={home.related.description} eyebrow={home.related.eyebrow} id="smezhnye" title={home.related.title}>
+      <div class="grid gap-4 md:grid-cols-3">
+        {related.map((item) => (
+          <a class="group rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-white p-5 transition hover:-translate-y-1 hover:border-[var(--color-amber)] hover:shadow-[var(--shadow-glow)] motion-reduce:hover:translate-y-0" href={`/uslugi/${item.data.slug}`}>
+            <h3 class="text-lg font-semibold">{item.data.title}</h3>
+            <p class="mt-2 text-sm leading-6 text-[var(--color-muted)]">{item.data.summary}</p>
+            <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-gold-deep)]">
+              Открыть <ArrowRight aria-hidden size={16} />
+            </span>
+          </a>
+        ))}
+      </div>
+    </Section>
+  )
+}
+
+{
+  cases.length > 0 && (
+    <Section description={home.cases.description} eyebrow={home.cases.eyebrow} id="keisy" title={home.cases.title} tone="white">
+      <div class="grid gap-5 lg:grid-cols-3">
+        {cases.slice(0, 3).map((item) => (
+          <Card class="flex h-full flex-col" href={`/keisy/${item.data.slug}`}>
+            <Badge>{item.data.industry}</Badge>
+            <h3 class="mt-4 text-xl font-semibold">{item.data.title}</h3>
+            <p class="mt-3 flex-1 text-sm leading-6 text-[var(--color-muted)]">{item.data.summary}</p>
+            <p class="mt-4 text-sm font-medium text-[var(--color-gold-deep)]">{item.data.result}</p>
+          </Card>
+        ))}
+      </div>
+      <div class="mt-8">
+        <Button href={home.cases.button.href} variant="secondary">{home.cases.button.label}</Button>
+      </div>
+    </Section>
+  )
+}
+
+<Section description={home.faq.description} eyebrow={home.faq.eyebrow} id="faq" title={home.faq.title}>
+  <div class="mx-auto grid max-w-3xl gap-3">
+    {
+      faq.map((item) => (
+        <details class="group rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-white px-5 py-4 open:shadow-[var(--shadow-sm)]">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left font-semibold">
+            <span>{item.question}</span>
+            <span class="text-[var(--color-gold-deep)] transition group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-3 text-sm leading-6 text-[var(--color-muted)]">{item.answer}</p>
+        </details>
+      ))
+    }
+  </div>
+</Section>
+
+<section class="relative isolate overflow-hidden py-16 sm:py-24">
+  <div class="absolute inset-0 bg-gradient-cta"></div>
+  <div class="pointer-events-none absolute -left-10 top-0 h-64 w-96 rounded-full bg-[rgb(255_212_59_/_0.28)] blur-3xl"></div>
+  <div class="pointer-events-none absolute -right-8 bottom-0 h-64 w-96 rounded-full bg-[rgb(77_107_255_/_0.4)] blur-3xl"></div>
+  <Container class="relative">
+    <h2 class="max-w-3xl text-balance text-3xl font-semibold tracking-tight text-white sm:text-5xl">{home.cta.title}</h2>
+    <p class="mt-5 max-w-2xl text-pretty text-lg leading-8 text-white/80">{home.cta.description}</p>
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+      <Button href={home.cta.primaryButton.href} size="lg">{home.cta.primaryButton.label}</Button>
+      <Button class="border-white/25 bg-transparent text-white hover:bg-white/10" href={home.cta.secondaryButton.href} size="lg" variant="glass">
+        {home.cta.secondaryButton.label}
+      </Button>
+    </div>
+  </Container>
+</section>
+
+<ContactSection contact={home.contact} metrikaId={counter} services={serviceOptions} site={site} tariffs={tariffs} />

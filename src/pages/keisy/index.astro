@@ -1,0 +1,37 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Card from "@/components/ui/Card.astro";
+import Container from "@/components/ui/Container.astro";
+import Badge from "@/components/ui/Badge.astro";
+import { getCases, getSite } from "@/lib/content";
+
+const site = getSite();
+const cases = await getCases();
+---
+
+<BaseLayout
+  description="Типовые сценарии работы Лёгкого кода: обмен с сайтом, связка с Битрикс24 и сопровождение нетиповой базы."
+  title={`Сценарии — ${site.name}`}
+>
+  <main id="main-content">
+    <Container class="py-16 sm:py-20">
+      <Badge>Сценарии</Badge>
+      <h1 class="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">Как выглядит работа, без чужих процентов</h1>
+      <p class="mt-5 max-w-2xl text-lg leading-8 text-[var(--color-muted)]">
+        Названия компаний не ставим, пока нет разрешения. Тексты описывают контур, который можно повторить.
+      </p>
+      <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {
+          cases.map((item) => (
+            <Card class="flex h-full flex-col" href={`/keisy/${item.data.slug}`}>
+              <Badge>{item.data.industry}</Badge>
+              <h2 class="mt-4 text-xl font-semibold">{item.data.title}</h2>
+              <p class="mt-3 flex-1 text-sm leading-6 text-[var(--color-muted)]">{item.data.summary}</p>
+              <p class="mt-4 text-sm font-medium text-[var(--color-gold-deep)]">{item.data.result}</p>
+            </Card>
+          ))
+        }
+      </div>
+    </Container>
+  </main>
+</BaseLayout>

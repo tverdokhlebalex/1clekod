@@ -1,0 +1,46 @@
+---
+import { render } from "astro:content";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Container from "@/components/ui/Container.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCases, getServices } from "@/lib/content";
+
+export async function getStaticPaths() {
+  const cases = await getCases();
+  return cases.map((item) => ({ params: { slug: item.data.slug } }));
+}
+
+const { slug } = Astro.params;
+const cases = await getCases();
+const item = cases.find((entry) => entry.data.slug === slug);
+if (!item) throw new Error(`Сценарий не найден: ${slug}`);
+const { Content } = await render(item);
+const services = await getServices();
+const service = services.find((entry) => entry.data.slug === item.data.serviceSlug);
+---
+
+<BaseLayout description={item.data.seoDescription} title={item.data.seoTitle}>
+  <main id="main-content">
+    <Container class="py-16 sm:py-20">
+      <p class="text-sm text-[var(--color-muted)]">
+        <a href="/">Главная</a> / <a href="/keisy">Сценарии</a> / {item.data.title}
+      </p>
+      <Badge class="mt-6">{item.data.industry}</Badge>
+      <h1 class="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">{item.data.title}</h1>
+      <p class="mt-4 text-sm text-[var(--color-muted)]">{item.data.client}</p>
+      <p class="mt-6 max-w-2xl text-lg leading-8 text-[var(--color-muted)]">{item.data.summary}</p>
+      <p class="mt-4 max-w-2xl font-medium text-[var(--color-gold-deep)]">{item.data.result}</p>
+      <article class="richtext mt-10 max-w-3xl">
+        <Content />
+      </article>
+      {
+        service && (
+          <div class="mt-10">
+            <Button href={`/uslugi/${service.data.slug}`}>К услуге: {service.data.title}</Button>
+          </div>
+        )
+      }
+    </Container>
+  </main>
+</BaseLayout>
