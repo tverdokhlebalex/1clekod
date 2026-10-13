@@ -1,203 +1,207 @@
 import { z } from "zod";
 import { iconNames, layouts } from "./icons";
 
+// Pages CMS не записывает пустую строку и удаляет ключ. Необязательное поле тогда читается как "".
+const optionalText = z.string().optional().default("");
+const requiredText = z.string().min(1);
+
 export const iconSchema = z.enum(iconNames);
 
 export const buttonSchema = z.object({
-  label: z.string().min(1),
-  href: z.string().min(1)
+  label: optionalText,
+  href: optionalText
 });
 
 export const seoSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1)
+  title: optionalText,
+  description: optionalText
 });
 
 export const cardSchema = z.object({
   icon: iconSchema,
-  title: z.string().min(1),
-  text: z.string().min(1)
+  title: optionalText,
+  text: optionalText
 });
 
 export const siteSchema = z.object({
-  name: z.string().min(1),
-  logo: z.string().optional().default(""),
-  tagline: z.string().min(1),
-  url: z.url(),
-  locale: z.string().min(1),
+  name: requiredText,
+  logo: optionalText,
+  tagline: requiredText,
+  url: z.url().optional().default("https://1clekod.ru"),
+  locale: z.string().optional().default("ru_RU"),
   email: z.email(),
-  legalName: z.string(),
-  inn: z.string(),
-  ogrn: z.string(),
-  city: z.string(),
-  metrikaId: z.string(),
-  metrikaGoal: z.string().min(1),
-  yandexVerification: z.string(),
-  googleVerification: z.string(),
-  ogImage: z.string(),
+  legalName: optionalText,
+  inn: optionalText,
+  ogrn: optionalText,
+  city: optionalText,
+  metrikaId: optionalText,
+  metrikaGoal: z.string().optional().default("lead_submit"),
+  yandexVerification: optionalText,
+  googleVerification: optionalText,
+  ogImage: optionalText,
   headerButton: buttonSchema,
-  nav: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })).min(1),
+  nav: z.array(z.object({ label: optionalText, href: optionalText })).min(1),
   phones: z.array(
     z.object({
-      label: z.string().min(1),
-      display: z.string().min(1),
-      href: z.string().min(1)
+      label: optionalText,
+      display: optionalText,
+      href: optionalText
     })
   ),
   messengers: z.array(
     z.object({
-      label: z.string().min(1),
-      display: z.string().min(1),
-      href: z.string().min(1)
+      label: optionalText,
+      display: optionalText,
+      href: optionalText
     })
   ),
-  addresses: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })),
-  footerText: z.string().min(1),
-  cookieText: z.string().min(1),
+  addresses: z.array(z.object({ label: optionalText, value: optionalText })),
+  footerText: requiredText,
+  cookieText: optionalText,
   seo: seoSchema.extend({
-    keywords: z.array(z.string())
+    keywords: z.array(z.string()).optional().default([])
   })
 });
 
 const panelRowSchema = z.object({
-  title: z.string(),
-  meta: z.string(),
-  state: z.string(),
+  title: optionalText,
+  meta: optionalText,
+  state: optionalText,
   progress: z.number().min(0).max(100)
 });
 
 export const homeSchema = z.object({
   seo: seoSchema,
   hero: z.object({
-    eyebrow: z.string(),
-    titleBefore: z.string(),
-    titleAccent: z.string(),
-    titleAfter: z.string(),
-    description: z.string(),
+    eyebrow: optionalText,
+    titleBefore: requiredText,
+    titleAccent: requiredText,
+    titleAfter: optionalText,
+    description: requiredText,
     primaryButton: buttonSchema,
     secondaryButton: buttonSchema,
-    stats: z.array(z.object({ value: z.string(), label: z.string() })).min(1),
+    stats: z.array(z.object({ value: optionalText, label: optionalText })).min(1),
     panel: z.object({
-      title: z.string(),
-      status: z.string(),
-      noticeTitle: z.string(),
-      noticeText: z.string(),
+      title: optionalText,
+      status: optionalText,
+      noticeTitle: optionalText,
+      noticeText: optionalText,
       rows: z.array(panelRowSchema),
-      lanes: z.array(z.object({ label: z.string(), value: z.string() })),
-      taskTitle: z.string(),
-      taskText: z.string(),
-      channels: z.array(z.object({ label: z.string(), icon: iconSchema }))
+      lanes: z.array(z.object({ label: optionalText, value: optionalText })),
+      taskTitle: optionalText,
+      taskText: optionalText,
+      channels: z.array(z.object({ label: optionalText, icon: iconSchema }))
     })
   }),
   problems: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string(),
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText,
     items: z.array(cardSchema)
   }),
   areas: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string(),
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText,
     items: z.array(cardSchema)
   }),
   services: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string()
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText
   }),
   integrations: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string(),
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText,
     items: z.array(
       cardSchema.extend({
-        tag: z.string(),
+        tag: optionalText,
         layout: z.enum(layouts),
-        href: z.string(),
-        outcome: z.string()
+        href: optionalText,
+        outcome: optionalText
       })
     )
   }),
   process: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string(),
-    sideBadge: z.string(),
-    sideTitle: z.string(),
-    sideText: z.string(),
-    sideNote: z.string(),
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText,
+    sideBadge: optionalText,
+    sideTitle: optionalText,
+    sideText: optionalText,
+    sideNote: optionalText,
     button: buttonSchema,
     steps: z.array(
       z.object({
-        number: z.string(),
+        number: optionalText,
         icon: iconSchema,
-        title: z.string(),
-        text: z.string(),
-        deliverable: z.string()
+        title: optionalText,
+        text: optionalText,
+        deliverable: optionalText
       })
     )
   }),
   tariffs: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string()
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText
   }),
   tasks: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string(),
-    items: z.array(z.string())
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText,
+    items: z.array(z.string()).optional().default([])
   }),
   reasons: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string(),
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText,
     items: z.array(cardSchema)
   }),
   related: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string()
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText
   }),
   cases: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string(),
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText,
     button: buttonSchema
   }),
   faq: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string()
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText
   }),
   cta: z.object({
-    title: z.string(),
-    description: z.string(),
+    title: optionalText,
+    description: optionalText,
     primaryButton: buttonSchema,
     secondaryButton: buttonSchema
   }),
   contact: z.object({
-    eyebrow: z.string(),
-    title: z.string(),
-    description: z.string(),
-    points: z.array(z.string()),
-    formTitle: z.string(),
-    submitLabel: z.string(),
-    successTitle: z.string(),
-    successText: z.string()
+    eyebrow: optionalText,
+    title: optionalText,
+    description: optionalText,
+    points: z.array(z.string()).optional().default([]),
+    formTitle: optionalText,
+    submitLabel: optionalText,
+    successTitle: optionalText,
+    successText: optionalText
   })
 });
 
 export const tariffSchema = z.object({
-  slug: z.string().min(1),
-  name: z.string().min(1),
-  price: z.string().optional().default(""),
-  priceLabel: z.string().min(1),
-  priceNote: z.string(),
-  description: z.string().min(1),
-  features: z.array(z.string()),
-  hourPacks: z.array(z.string()),
+  slug: requiredText,
+  name: requiredText,
+  price: optionalText,
+  priceLabel: requiredText,
+  priceNote: optionalText,
+  description: optionalText,
+  features: z.array(z.string()).optional().default([]),
+  hourPacks: z.array(z.string()).optional().default([]),
   accent: z.boolean(),
   order: z.number(),
   button: buttonSchema
@@ -214,53 +218,53 @@ export const redirectSchema = z.object({
   to: z.string().min(1),
   status: z.union([z.literal(301), z.literal(302)]),
   enabled: z.boolean(),
-  comment: z.string()
+  comment: optionalText
 });
 
 export const serviceSchema = z.object({
-  title: z.string().min(1),
+  title: requiredText,
   slug: z.string().regex(/^[a-z0-9-]+$/),
-  tag: z.string(),
-  summary: z.string(),
-  outcome: z.string(),
+  tag: optionalText,
+  summary: requiredText,
+  outcome: optionalText,
   layout: z.enum(layouts),
   icon: iconSchema,
   group: z.enum(["primary", "related"]),
   order: z.number(),
   published: z.boolean().default(true),
   featuredOnHome: z.boolean().default(true),
-  heroLead: z.string(),
-  benefits: z.array(z.object({ title: z.string(), text: z.string() })),
-  steps: z.array(z.object({ title: z.string(), text: z.string() })),
-  faq: z.array(z.object({ question: z.string(), answer: z.string() })),
-  seoTitle: z.string(),
-  seoDescription: z.string(),
-  cover: z.string().default(""),
+  heroLead: optionalText,
+  benefits: z.array(z.object({ title: optionalText, text: optionalText })).optional().default([]),
+  steps: z.array(z.object({ title: optionalText, text: optionalText })).optional().default([]),
+  faq: z.array(z.object({ question: optionalText, answer: optionalText })).optional().default([]),
+  seoTitle: requiredText,
+  seoDescription: requiredText,
+  cover: optionalText,
   primaryButton: buttonSchema,
   secondaryButton: buttonSchema
 });
 
 export const caseSchema = z.object({
-  title: z.string(),
+  title: requiredText,
   slug: z.string().regex(/^[a-z0-9-]+$/),
-  client: z.string(),
-  industry: z.string(),
-  summary: z.string(),
-  result: z.string(),
-  serviceSlug: z.string(),
+  client: optionalText,
+  industry: optionalText,
+  summary: optionalText,
+  result: optionalText,
+  serviceSlug: optionalText,
   order: z.number(),
   published: z.boolean().default(true),
-  cover: z.string().default(""),
-  seoTitle: z.string(),
-  seoDescription: z.string()
+  cover: optionalText,
+  seoTitle: optionalText,
+  seoDescription: optionalText
 });
 
 export const legalSchema = z.object({
-  title: z.string(),
+  title: requiredText,
   slug: z.string().regex(/^[a-z0-9-]+$/),
-  description: z.string(),
-  seoTitle: z.string(),
-  seoDescription: z.string()
+  description: optionalText,
+  seoTitle: optionalText,
+  seoDescription: optionalText
 });
 
 export const leadSchema = z.object({

@@ -887,6 +887,7 @@ content:
           - name: slug
             label: Код формата
             type: string
+            required: true
             description: Нужен, чтобы кнопка открывала форму с выбранным форматом
           - name: price
             label: Цена
