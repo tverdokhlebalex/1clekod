@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer.astro";
 import { CookieBanner } from "@/components/islands/CookieBanner";
 import { Header } from "@/components/islands/Header";
 import { getSite, metrikaId } from "@/lib/content";
+import { withBase } from "@/lib/path";
 
 type Props = {
   title: string;
@@ -16,7 +17,9 @@ type Props = {
 const { title, description, noindex = false, jsonLd = [] } = Astro.props;
 const site = getSite();
 const origin = Astro.site ?? new URL(site.url);
-const canonical = new URL(Astro.url.pathname, origin);
+const canonicalPath = Astro.url.pathname.replace(/\.html$/, "").replace(/\/index$/, "") || "/";
+const canonical = new URL(canonicalPath, origin);
+const hidden = noindex || import.meta.env.PUBLIC_NOINDEX === "true";
 const counter = metrikaId(site);
 const showMetrika = /^\d+$/.test(counter);
 const image = site.ogImage ? new URL(site.ogImage, origin).href : "";
@@ -32,8 +35,8 @@ const image = site.ogImage ? new URL(site.ogImage, origin).href : "";
     <meta name="description" content={description} />
     <meta name="keywords" content={site.seo.keywords.join(", ")} />
     <link rel="canonical" href={canonical.href} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large"} />
+    <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
+    <meta name="robots" content={hidden ? "noindex, nofollow" : "index, follow, max-image-preview:large"} />
     {site.yandexVerification && <meta name="yandex-verification" content={site.yandexVerification} />}
     {site.googleVerification && <meta name="google-site-verification" content={site.googleVerification} />}
     <meta property="og:type" content="website" />

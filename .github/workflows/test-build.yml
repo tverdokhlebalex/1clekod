@@ -5,6 +5,16 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -15,29 +25,62 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node.js
+        if: github.event_name == 'pull_request'
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
       - name: Зависимости
+        if: github.event_name == 'pull_request'
         run: npm ci
 
       - name: Схема CMS
+        if: github.event_name == 'pull_request'
         run: npm run check:cms
 
       - name: Типы
+        if: github.event_name == 'pull_request'
         run: npm run check
 
-      - name: Сборка
+      - name: Сборка для проверки
+        if: github.event_name == 'pull_request'
         run: npm run build
         env:
           PUBLIC_SITE_URL: https://1clekod.ru
 
-      - name: Артефакт тестовой сборки
+      - name: Архив проверки
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: test-site
           path: dist
           retention-days: 7
           if-no-files-found: error
+
+      - name: Сборка и артефакт GitHub Pages
+        if: github.event_name != 'pull_request'
+        uses: withastro/action@v6
+        with:
+          node-version: 22
+          package-manager: npm
+          build-cmd: npm run check:cms && npm run check && npm run build
+          out-dir: dist/client
+        env:
+          PUBLIC_SITE_URL: https://tverdokhlebalex.github.io
+          PUBLIC_BASE_PATH: /1clekod
+          PUBLIC_NOINDEX: "true"
+          PUBLIC_STATIC_HOST: "true"
+
+  deploy:
+    name: Публикация
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Публикация на GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

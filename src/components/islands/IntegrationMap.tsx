@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import type { IconName } from "@/lib/icons";
+import { withBase } from "@/lib/path";
 
 type Node = {
   title: string;
@@ -95,7 +96,7 @@ export function IntegrationMap({ items }: { items: Node[] }) {
             className={`absolute z-10 w-48 rounded-[var(--radius-lg)] border px-4 py-3 transition focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)] ${
               active === index ? "border-[#ffd43b] bg-[#1c2636]" : "border-white/10 bg-[#161e2e] hover:border-white/30"
             }`}
-            href={item.href}
+            href={withBase(item.href)}
             key={item.href + item.title}
             onBlur={() => setActive(index)}
             onFocus={() => setActive(index)}
@@ -122,7 +123,7 @@ export function IntegrationMap({ items }: { items: Node[] }) {
         {items.map((item, index) => (
           <a
             className="rounded-[var(--radius-lg)] border border-white/10 bg-white/[0.04] px-4 py-3"
-            href={item.href}
+            href={withBase(item.href)}
             key={item.title}
             onClick={() => setActive(index)}
           >

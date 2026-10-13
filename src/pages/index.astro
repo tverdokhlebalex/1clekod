@@ -2,17 +2,20 @@
 import HomePage from "@/components/sections/HomePage.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getFaq, getHome, getSite } from "@/lib/content";
+import { withBase } from "@/lib/path";
 
 const site = getSite();
 const home = getHome();
 const faq = getFaq();
+const origin = Astro.site ?? new URL(site.url);
+const pageUrl = new URL(withBase("/"), origin).href;
 
 const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: site.name,
-    url: site.url,
+    url: pageUrl,
     email: site.email,
     description: home.seo.description,
     areaServed: "RU",

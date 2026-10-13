@@ -1,4 +1,5 @@
 import { useEffect, useId, useState } from "react";
+import { withBase } from "@/lib/path";
 import { leadSchema, type LeadInput } from "@/lib/schema";
 
 type Option = { slug: string; name: string };
@@ -111,14 +112,23 @@ export function ContactForm({
     setErrors({});
     setPending(true);
     try {
-      const response = await fetch("/api/lead", {
+      const response = await fetch(withBase("/api/lead"), {
         method: "POST",
         headers: { "content-type": "application/json", accept: "application/json" },
         body: JSON.stringify(parsed.data)
       });
-      const payload = (await response.json().catch(() => null)) as { ok?: boolean; message?: string } | null;
-      if (!response.ok || !payload?.ok) {
-        setFormError(payload?.message || "Не удалось отправить заявку. Позвоните нам, если вопрос срочный.");
+      const type = response.headers.get("content-type") ?? "";
+      const payload = type.includes("application/json")
+        ? ((await response.json().catch(() => null)) as { ok?: boolean; message?: string } | null)
+        : null;
+      if (!response.ok || payload?.ok !== true) {
+        const offline = response.status === 404 || response.status === 405 || !type.includes("application/json");
+        setFormError(
+          payload?.message ||
+            (offline
+              ? "На этой версии сайта отправка заявок ещё не подключена. Позвоните или напишите на почту."
+              : "Не удалось отправить заявку. Позвоните нам, если вопрос срочный.")
+        );
         return;
       }
       reachGoal(metrikaId, metrikaGoal);
@@ -214,11 +224,11 @@ export function ContactForm({
         />
         <span>
           Соглашаюсь на обработку персональных данных и принимаю{" "}
-          <a className="font-semibold text-[var(--color-gold-deep)] underline" href="/privacy">
+          <a className="font-semibold text-[var(--color-gold-deep)] underline" href={withBase("/privacy")}>
             политику
           </a>{" "}
           и{" "}
-          <a className="font-semibold text-[var(--color-gold-deep)] underline" href="/consent">
+          <a className="font-semibold text-[var(--color-gold-deep)] underline" href={withBase("/consent")}>
             согласие
           </a>
           .

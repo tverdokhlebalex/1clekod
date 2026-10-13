@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { withBase } from "@/lib/path";
 
 const STORAGE_KEY = "lekod-cookie-consent";
 
@@ -24,7 +25,7 @@ export function CookieBanner({ text }: { text: string }) {
       <div className="mx-auto flex max-w-5xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm leading-6 text-[var(--color-muted)]">
           {text}{" "}
-          <a className="font-semibold text-[var(--color-gold-deep)] underline" href="/cookies">
+          <a className="font-semibold text-[var(--color-gold-deep)] underline" href={withBase("/cookies")}>
             Подробнее
           </a>
         </p>

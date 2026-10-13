@@ -1,6 +1,7 @@
 ---
 import { LogoMark } from "@/components/ui/LogoMark";
 import { getSite } from "@/lib/content";
+import { withBase } from "@/lib/path";
 
 const site = getSite();
 const year = new Date().getFullYear();
@@ -10,8 +11,8 @@ const requisites = [site.legalName, site.inn && `ИНН ${site.inn}`, site.ogrn 
 <footer class="border-t border-[var(--color-line)] bg-white">
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-10 sm:px-6 md:grid-cols-[1.2fr_0.8fr_1fr] lg:px-8">
     <div>
-      <a class="inline-flex items-center gap-2.5 text-lg font-semibold tracking-tight" href="/">
-        {site.logo ? <img alt="" class="size-9 shrink-0 rounded-[8px] object-contain" src={site.logo} /> : <LogoMark />}
+      <a class="inline-flex items-center gap-2.5 text-lg font-semibold tracking-tight" href={withBase("/")}>
+        {site.logo ? <img alt="" class="size-9 shrink-0 rounded-[8px] object-contain" src={withBase(site.logo)} /> : <LogoMark />}
         {site.name}
       </a>
       <p class="mt-1 text-sm text-[var(--color-muted)]">{site.tagline}</p>
@@ -19,14 +20,14 @@ const requisites = [site.legalName, site.inn && `ИНН ${site.inn}`, site.ogrn 
       <div class="mt-6 grid gap-2 text-sm">
         {
           site.phones.map((phone) => (
-            <a class="hover:text-[var(--color-gold-deep)]" href={phone.href}>
+            <a class="hover:text-[var(--color-gold-deep)]" href={withBase(phone.href)}>
               {phone.label}: {phone.display}
             </a>
           ))
         }
         {
           site.messengers.map((item) => (
-            <a class="hover:text-[var(--color-gold-deep)]" href={item.href}>
+            <a class="hover:text-[var(--color-gold-deep)]" href={withBase(item.href)}>
               {item.label}: {item.display}
             </a>
           ))
@@ -40,21 +41,21 @@ const requisites = [site.legalName, site.inn && `ИНН ${site.inn}`, site.ogrn 
       <div class="mt-4 grid gap-3 text-sm">
         {
           site.nav.map((item) => (
-            <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href={item.href}>
+            <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href={withBase(item.href)}>
               {item.label}
             </a>
           ))
         }
-        <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href="/uslugi">Все услуги</a>
-        <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href="/keisy">Сценарии</a>
+        <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href={withBase("/uslugi")}>Все услуги</a>
+        <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href={withBase("/keisy")}>Сценарии</a>
       </div>
     </div>
     <div>
       <h2 class="text-sm font-semibold">Документы</h2>
       <div class="mt-4 grid gap-3 text-sm">
-        <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href="/privacy">Политика обработки персональных данных</a>
-        <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href="/consent">Согласие на обработку персональных данных</a>
-        <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href="/cookies">Cookies</a>
+        <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href={withBase("/privacy")}>Политика обработки персональных данных</a>
+        <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href={withBase("/consent")}>Согласие на обработку персональных данных</a>
+        <a class="text-[var(--color-muted)] hover:text-[var(--color-gold-deep)]" href={withBase("/cookies")}>Cookies</a>
       </div>
       <div class="mt-6 grid gap-2 text-sm text-[var(--color-muted)]">
         {site.addresses.map((address) => <p>{address.label}: {address.value}</p>)}

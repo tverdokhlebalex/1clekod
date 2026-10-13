@@ -1,4 +1,5 @@
 ---
+import { withBase } from "@/lib/path";
 import { buttonClass } from "@/lib/ui";
 
 type Props = {
@@ -11,11 +12,12 @@ type Props = {
 
 const { href, variant = "primary", size = "md", class: className, type = "button" } = Astro.props;
 const classes = buttonClass({ variant, size, className });
+const link = href ? withBase(href) : undefined;
 ---
 
 {
   href ? (
-    <a class={classes} href={href}>
+    <a class={classes} href={link}>
       <slot />
     </a>
   ) : (

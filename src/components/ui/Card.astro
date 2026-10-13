@@ -1,5 +1,6 @@
 ---
 import { cn } from "@/lib/cn";
+import { withBase } from "@/lib/path";
 
 type Props = {
   tone?: "default" | "soft" | "accent" | "featured" | "inverse";
@@ -9,6 +10,7 @@ type Props = {
 };
 
 const { tone = "default", interactive = true, class: className, href } = Astro.props;
+const link = href ? withBase(href) : undefined;
 const tones = {
   default: "border-[var(--color-line)] bg-white",
   soft: "border-[var(--color-line)] bg-[var(--color-page)]",
@@ -27,7 +29,7 @@ const classes = cn(
 
 {
   href ? (
-    <a class:list={[classes, "block h-full"]} href={href}>
+    <a class:list={[classes, "block h-full"]} href={link}>
       <slot />
     </a>
   ) : (

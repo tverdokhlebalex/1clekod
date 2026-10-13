@@ -8,6 +8,7 @@ import Container from "@/components/ui/Container.astro";
 import Section from "@/components/ui/Section.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getHome, getServices, getSite, getTariffs, metrikaId } from "@/lib/content";
+import { withBase } from "@/lib/path";
 
 export async function getStaticPaths() {
   const services = await getServices();
@@ -26,7 +27,7 @@ const home = getHome();
 const tariffs = getTariffs();
 const others = services.filter((item) => item.data.slug !== service.data.slug).slice(0, 3);
 const origin = Astro.site ?? new URL(site.url);
-const canonical = new URL(`/uslugi/${service.data.slug}`, origin).href;
+const canonical = new URL(withBase(`/uslugi/${service.data.slug}`), origin).href;
 
 const jsonLd = [
   {
@@ -42,8 +43,8 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Главная", item: site.url },
-      { "@type": "ListItem", position: 2, name: "Услуги", item: new URL("/uslugi", origin).href },
+      { "@type": "ListItem", position: 1, name: "Главная", item: new URL(withBase("/"), origin).href },
+      { "@type": "ListItem", position: 2, name: "Услуги", item: new URL(withBase("/uslugi"), origin).href },
       { "@type": "ListItem", position: 3, name: service.data.title, item: canonical }
     ]
   }
@@ -56,9 +57,9 @@ const jsonLd = [
       <div class="pointer-events-none absolute -right-10 top-10 h-64 w-64 rounded-full bg-[rgb(242_201_74_/_0.35)] blur-3xl"></div>
       <Container class="py-16 sm:py-20">
         <p class="text-sm text-[var(--color-muted)]">
-          <a class="hover:text-[var(--color-gold-deep)]" href="/">Главная</a>
+          <a class="hover:text-[var(--color-gold-deep)]" href={withBase("/")}>Главная</a>
           <span aria-hidden="true"> / </span>
-          <a class="hover:text-[var(--color-gold-deep)]" href="/uslugi">Услуги</a>
+          <a class="hover:text-[var(--color-gold-deep)]" href={withBase("/uslugi")}>Услуги</a>
           <span aria-hidden="true"> / </span>
           <span>{service.data.title}</span>
         </p>

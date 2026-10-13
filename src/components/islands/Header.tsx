@@ -4,6 +4,7 @@ import { ArrowRight, Menu, X } from "lucide-react";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { buttonClass } from "@/lib/ui";
 import { cn } from "@/lib/cn";
+import { withBase } from "@/lib/path";
 
 type Item = { label: string; href: string };
 
@@ -54,8 +55,8 @@ export function Header({ name, tagline, logo, nav, cta }: HeaderProps) {
       )}
     >
       <div className="mx-auto flex h-[4.25rem] w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-        <a className="flex min-w-0 items-center gap-2.5" href="/">
-          {logo ? <img alt="" className="size-9 shrink-0 rounded-[8px] object-contain" src={logo} /> : <LogoMark />}
+        <a className="flex min-w-0 items-center gap-2.5" href={withBase("/")}>
+          {logo ? <img alt="" className="size-9 shrink-0 rounded-[8px] object-contain" src={withBase(logo)} /> : <LogoMark />}
           <span className="min-w-0">
             <span className="block text-base font-semibold tracking-tight text-[var(--color-ink)]">{name}</span>
             <span className="block truncate text-xs text-[var(--color-muted)]">{tagline}</span>
@@ -69,7 +70,7 @@ export function Header({ name, tagline, logo, nav, cta }: HeaderProps) {
           {nav.map((item) => (
             <a
               className="rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-gold-soft)] hover:text-[var(--color-ink)] focus-visible:shadow-[var(--shadow-focus)]"
-              href={item.href}
+              href={withBase(item.href)}
               key={item.href}
             >
               {item.label}
@@ -78,7 +79,7 @@ export function Header({ name, tagline, logo, nav, cta }: HeaderProps) {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
-          <a className={cn(buttonClass({ size: "md" }), "hidden sm:inline-flex")} href={cta.href}>
+          <a className={cn(buttonClass({ size: "md" }), "hidden sm:inline-flex")} href={withBase(cta.href)}>
             {cta.label}
             <ArrowRight aria-hidden size={18} />
           </a>
@@ -109,14 +110,14 @@ export function Header({ name, tagline, logo, nav, cta }: HeaderProps) {
               {nav.map((item) => (
                 <a
                   className="rounded-[var(--radius-md)] px-3 py-3 text-sm font-medium text-[var(--color-ink)] hover:bg-[var(--color-gold-soft)]"
-                  href={item.href}
+                  href={withBase(item.href)}
                   key={item.href}
                   onClick={() => setOpen(false)}
                 >
                   {item.label}
                 </a>
               ))}
-              <a className={cn(buttonClass({ size: "lg" }), "mt-2 w-full")} href={cta.href} onClick={() => setOpen(false)}>
+              <a className={cn(buttonClass({ size: "lg" }), "mt-2 w-full")} href={withBase(cta.href)} onClick={() => setOpen(false)}>
                 {cta.label}
                 <ArrowRight aria-hidden size={18} />
               </a>

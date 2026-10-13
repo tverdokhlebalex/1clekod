@@ -12,6 +12,7 @@ import Container from "@/components/ui/Container.astro";
 import Section from "@/components/ui/Section.astro";
 import { Icon } from "@/components/ui/Icon";
 import { getCases, getFaq, getHome, getServices, getSite, getTariffs, metrikaId } from "@/lib/content";
+import { withBase } from "@/lib/path";
 import type { BentoLayout } from "@/lib/icons";
 
 const home = getHome();
@@ -229,7 +230,7 @@ const visuals = {
     <Section description={home.related.description} eyebrow={home.related.eyebrow} id="smezhnye" title={home.related.title}>
       <div class="grid gap-4 md:grid-cols-3">
         {related.map((item) => (
-          <a class="group rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-white p-5 transition hover:-translate-y-1 hover:border-[var(--color-amber)] hover:shadow-[var(--shadow-glow)] motion-reduce:hover:translate-y-0" href={`/uslugi/${item.data.slug}`}>
+          <a class="group rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-white p-5 transition hover:-translate-y-1 hover:border-[var(--color-amber)] hover:shadow-[var(--shadow-glow)] motion-reduce:hover:translate-y-0" href={withBase(`/uslugi/${item.data.slug}`)}>
             <h3 class="text-lg font-semibold">{item.data.title}</h3>
             <p class="mt-2 text-sm leading-6 text-[var(--color-muted)]">{item.data.summary}</p>
             <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-gold-deep)]">
