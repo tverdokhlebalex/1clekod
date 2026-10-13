@@ -74,6 +74,7 @@ export function ContactForm({
   metrikaGoal = "lead_submit"
 }: ContactFormProps) {
   const id = useId();
+  const submissionUnavailable = import.meta.env.PUBLIC_STATIC_HOST === "true";
   const [values, setValues] = useState<FormState>({ ...empty, format: defaultFormat, service: defaultService });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [pending, setPending] = useState(false);
@@ -93,6 +94,10 @@ export function ContactForm({
 
   async function onSubmit(event: { preventDefault(): void }) {
     event.preventDefault();
+    if (submissionUnavailable) {
+      setFormError("На этой версии сайта отправка заявок ещё не подключена. Позвоните или напишите на почту.");
+      return;
+    }
     setFormError("");
     const parsed = leadSchema.safeParse({
       ...values,
@@ -152,6 +157,11 @@ export function ContactForm({
   return (
     <form className="grid gap-4" noValidate onSubmit={onSubmit}>
       <h3 className="text-xl font-semibold">{formTitle}</h3>
+      {submissionUnavailable && (
+        <p className="rounded-[var(--radius-md)] bg-[var(--color-gold-soft)] px-4 py-3 text-sm leading-6 text-[var(--color-ink)]" role="status">
+          На этой версии сайта отправка заявок пока недоступна. Позвоните или напишите на почту — контакты указаны рядом с формой.
+        </p>
+      )}
       <label className="grid gap-1.5 text-sm font-medium" htmlFor={`${id}-name`}>
         Имя
         <input className={fieldClass} id={`${id}-name`} name="name" autoComplete="name" value={values.name} onChange={(event) => set("name", event.target.value)} />

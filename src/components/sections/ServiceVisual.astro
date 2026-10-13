@@ -1,5 +1,5 @@
 ---
-type Lane = { from: string; label: string; to: string; reverse?: boolean };
+type Lane = { from: string; label: string; to: string };
 
 type Props = {
   slug: string;
@@ -9,15 +9,15 @@ type Props = {
 
 const exchangeLanes: Lane[] = [
   { from: "Сайт", label: "Заказы", to: "1С" },
-  { from: "1С", label: "Остатки и цены", to: "Сайт", reverse: true },
+  { from: "1С", label: "Остатки и цены", to: "Сайт" },
   { from: "База торговли", label: "Контрагенты", to: "Бухгалтерия" },
   { from: "Журнал обмена", label: "Ошибка, а не тишина", to: "Разбор" }
 ];
 
 const bitrixLanes: Lane[] = [
   { from: "Сделка в Битрикс24", label: "Заказ", to: "1С" },
-  { from: "1С", label: "Счёт и оплата", to: "Статус сделки", reverse: true },
-  { from: "1С", label: "Товары и остатки", to: "Битрикс24", reverse: true },
+  { from: "1С", label: "Счёт и оплата", to: "Статус сделки" },
+  { from: "1С", label: "Товары и остатки", to: "Битрикс24" },
   { from: "Контрагент", label: "Одна карточка", to: "Сторону согласуем" }
 ];
 
@@ -40,13 +40,17 @@ const diagram = slug === "obmeny-1s" || slug === "integraciya-1s-bitriks24";
           <li class="grid items-center gap-3 rounded-2xl bg-white/5 px-4 py-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)]">
             <p class="min-w-0 text-sm font-semibold">{lane.from}</p>
             <div class="min-w-0">
-              <p class="mb-2 text-center text-sm font-semibold text-[#ffd43b]">{lane.label}</p>
-              <div
-                class:list={["relative h-1.5 overflow-hidden rounded-full bg-white/10", lane.reverse && "scale-x-[-1]"]}
-                style="container-type: inline-size"
-              >
+              <p class="mb-2 text-center text-sm font-semibold text-[#ffd43b]">
+                {lane.label}
+                <span class="sr-only">, направление: {lane.from} → {lane.to}</span>
+              </p>
+              <div class="relative h-1.5 overflow-hidden rounded-full bg-white/10" style="container-type: inline-size">
                 <span class="packet absolute top-0 left-0 size-1.5 rounded-full bg-[#4d6bff] shadow-[0_0_10px_#4d6bff]" />
               </div>
+              <p aria-hidden="true" class="mt-1 text-center text-xs font-semibold text-[#4d6bff]">
+                <span class="sm:hidden">↓</span>
+                <span class="hidden sm:inline">→</span>
+              </p>
             </div>
             <p class="min-w-0 text-sm font-semibold sm:text-right">{lane.to}</p>
           </li>
@@ -95,7 +99,7 @@ const diagram = slug === "obmeny-1s" || slug === "integraciya-1s-bitriks24";
               <li class="rounded-xl bg-white/5 px-3 py-3">
                 <p class="text-center text-xs font-semibold text-[#ffd43b]">{lane.label}</p>
                 <p class="mt-1 text-center text-sm">
-                  {lane.from} <span class="text-[#4d6bff]">{lane.reverse ? "←" : "→"}</span> {lane.to}
+                  {lane.from} <span class="text-[#4d6bff]">→</span> {lane.to}
                 </p>
               </li>
             ))}
@@ -137,7 +141,10 @@ const diagram = slug === "obmeny-1s" || slug === "integraciya-1s-bitriks24";
               <p class="text-xs text-white/50">учёт</p>
               <p class="mt-1 text-sm font-semibold">1С</p>
             </div>
-            <p class="text-lg text-[#4d6bff]">↔</p>
+            <div class="grid justify-items-center gap-1 text-center text-xs font-semibold leading-tight text-white">
+              <span>← сделка</span>
+              <span>оплата →</span>
+            </div>
             <div class="rounded-xl bg-white/5 p-3 text-center">
               <p class="text-xs text-white/50">продажи</p>
               <p class="mt-1 text-sm font-semibold">Битрикс24</p>

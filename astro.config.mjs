@@ -24,6 +24,14 @@ function siteBase() {
 const base = siteBase();
 const staticHost = process.env.PUBLIC_STATIC_HOST === "true";
 
+function linkHref(node) {
+  const href = node.properties?.href;
+  if (typeof href === "string") return href;
+  if (Array.isArray(href) && typeof href[0] === "string") return href[0];
+  return "";
+}
+
+// Ссылки в Markdown остаются вида /uslugi/... В сборке для GitHub Pages к ним добавляется /1clekod.
 function prefixInternalLinks() {
   const prefix = base === "/" ? "" : base;
   return () => ({
@@ -31,15 +39,8 @@ function prefixInternalLinks() {
     element: {
       filter: ["a"],
       visit(node, ctx) {
-        const href = node.properties?.href;
-        if (
-          typeof href !== "string" ||
-          !href.startsWith("/") ||
-          href.startsWith("//") ||
-          !prefix ||
-          href === prefix ||
-          href.startsWith(`${prefix}/`)
-        ) {
+        const href = linkHref(node);
+        if (!prefix || !href.startsWith("/") || href.startsWith("//") || href === prefix || href.startsWith(`${prefix}/`)) {
           return;
         }
         ctx.setProperty(node, "href", `${prefix}${href}`);
