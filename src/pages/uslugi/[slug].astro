@@ -1,11 +1,6 @@
 ---
 import { render } from "astro:content";
-import ContactSection from "@/components/sections/ContactSection.astro";
-import Badge from "@/components/ui/Badge.astro";
-import Button from "@/components/ui/Button.astro";
-import Card from "@/components/ui/Card.astro";
-import Container from "@/components/ui/Container.astro";
-import Section from "@/components/ui/Section.astro";
+import ServicePage from "@/components/sections/ServicePage.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getHome, getServices, getSite, getTariffs, metrikaId } from "@/lib/content";
 import { withBase } from "@/lib/path";
@@ -25,9 +20,15 @@ const { Content } = await render(service);
 const site = getSite();
 const home = getHome();
 const tariffs = getTariffs();
-const others = services.filter((item) => item.data.slug !== service.data.slug).slice(0, 3);
 const origin = Astro.site ?? new URL(site.url);
 const canonical = new URL(withBase(`/uslugi/${service.data.slug}`), origin).href;
+const related = services.map((item) => ({
+  slug: item.data.slug,
+  title: item.data.title,
+  outcome: item.data.outcome,
+  summary: item.data.summary
+}));
+const faqEntities = service.data.faq.filter((item) => item.question.trim() && item.answer.trim());
 
 const jsonLd = [
   {
@@ -47,100 +48,32 @@ const jsonLd = [
       { "@type": "ListItem", position: 2, name: "Услуги", item: new URL(withBase("/uslugi"), origin).href },
       { "@type": "ListItem", position: 3, name: service.data.title, item: canonical }
     ]
-  }
+  },
+  ...(faqEntities.length
+    ? [
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqEntities.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: { "@type": "Answer", text: item.answer }
+          }))
+        }
+      ]
+    : [])
 ];
 ---
 
 <BaseLayout description={service.data.seoDescription} jsonLd={jsonLd} title={service.data.seoTitle}>
-  <main id="main-content">
-    <section class="bg-hero relative overflow-hidden">
-      <div class="pointer-events-none absolute -right-10 top-10 h-64 w-64 rounded-full bg-[rgb(242_201_74_/_0.35)] blur-3xl"></div>
-      <Container class="py-16 sm:py-20">
-        <p class="text-sm text-[var(--color-muted)]">
-          <a class="hover:text-[var(--color-gold-deep)]" href={withBase("/")}>Главная</a>
-          <span aria-hidden="true"> / </span>
-          <a class="hover:text-[var(--color-gold-deep)]" href={withBase("/uslugi")}>Услуги</a>
-          <span aria-hidden="true"> / </span>
-          <span>{service.data.title}</span>
-        </p>
-        <Badge class="mt-6">{service.data.tag}</Badge>
-        <h1 class="mt-4 max-w-4xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{service.data.title}</h1>
-        <p class="mt-5 max-w-2xl text-lg leading-8 text-[var(--color-muted)]">{service.data.heroLead}</p>
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button href={service.data.primaryButton.href} size="lg">{service.data.primaryButton.label}</Button>
-          <Button href={service.data.secondaryButton.href} size="lg" variant="secondary">{service.data.secondaryButton.label}</Button>
-        </div>
-      </Container>
-    </section>
-
-    <Section eyebrow="Что получаете" title="Практический результат" tone="white">
-      <div class="grid gap-5 md:grid-cols-2">
-        {
-          service.data.benefits.map((item) => (
-            <Card interactive={false}>
-              <h2 class="text-lg font-semibold">{item.title}</h2>
-              <p class="mt-2 text-sm leading-6 text-[var(--color-muted)]">{item.text}</p>
-            </Card>
-          ))
-        }
-      </div>
-    </Section>
-
-    <Section eyebrow="Порядок" title="Как проходит работа">
-      <ol class="grid gap-4 md:grid-cols-2">
-        {
-          service.data.steps.map((step, index) => (
-            <li class="rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-white p-5 shadow-[var(--shadow-sm)]">
-              <p class="text-sm font-semibold text-[var(--color-gold-deep)]">{String(index + 1).padStart(2, "0")}</p>
-              <h2 class="mt-2 text-lg font-semibold">{step.title}</h2>
-              <p class="mt-2 text-sm leading-6 text-[var(--color-muted)]">{step.text}</p>
-            </li>
-          ))
-        }
-      </ol>
-    </Section>
-
-    <Section tone="white">
-      <article class="richtext max-w-3xl">
-        <Content />
-      </article>
-    </Section>
-
-    {
-      service.data.faq.length > 0 && (
-        <Section eyebrow="Вопросы" title="По этой услуге">
-          <div class="grid max-w-4xl gap-4">
-            {service.data.faq.map((item) => (
-              <details class="rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-white p-5">
-                <summary class="cursor-pointer list-none font-semibold">{item.question}</summary>
-                <p class="mt-3 text-sm leading-6 text-[var(--color-muted)]">{item.answer}</p>
-              </details>
-            ))}
-          </div>
-        </Section>
-      )
-    }
-
-    <Section eyebrow="Рядом" title="Другие страницы" tone="soft">
-      <div class="grid gap-4 md:grid-cols-3">
-        {
-          others.map((item) => (
-            <Card href={`/uslugi/${item.data.slug}`}>
-              <h2 class="text-lg font-semibold">{item.data.title}</h2>
-              <p class="mt-2 text-sm leading-6 text-[var(--color-muted)]">{item.data.summary}</p>
-            </Card>
-          ))
-        }
-      </div>
-    </Section>
-
-    <ContactSection
-      contact={home.contact}
-      defaultService={service.data.title}
-      metrikaId={metrikaId(site)}
-      services={services.map((item) => ({ slug: item.data.slug, name: item.data.title }))}
-      site={site}
-      tariffs={tariffs}
-    />
-  </main>
+  <ServicePage
+    contact={home.contact}
+    metrikaId={metrikaId(site)}
+    service={service.data}
+    services={related}
+    site={site}
+    tariffs={tariffs}
+  >
+    <Content />
+  </ServicePage>
 </BaseLayout>

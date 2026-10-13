@@ -221,6 +221,11 @@ export const redirectSchema = z.object({
   comment: optionalText
 });
 
+const namedText = z.object({
+  title: optionalText,
+  text: optionalText
+});
+
 export const serviceSchema = z.object({
   title: requiredText,
   slug: z.string().regex(/^[a-z0-9-]+$/),
@@ -233,10 +238,35 @@ export const serviceSchema = z.object({
   order: z.number(),
   published: z.boolean().default(true),
   featuredOnHome: z.boolean().default(true),
+  heroTitle: optionalText,
   heroLead: optionalText,
-  benefits: z.array(z.object({ title: optionalText, text: optionalText })).optional().default([]),
-  steps: z.array(z.object({ title: optionalText, text: optionalText })).optional().default([]),
+  problemsTitle: optionalText,
+  problems: z.array(namedText).optional().default([]),
+  worksTitle: optionalText,
+  works: z.array(namedText).optional().default([]),
+  resultsTitle: optionalText,
+  benefits: z.array(namedText).optional().default([]),
+  stepsTitle: optionalText,
+  steps: z
+    .array(
+      z.object({
+        title: optionalText,
+        text: optionalText,
+        client: optionalText,
+        deliverable: optionalText
+      })
+    )
+    .optional()
+    .default([]),
+  formatsTitle: optionalText,
+  formatsNote: optionalText,
+  formats: z.array(z.string()).optional().default([]),
+  diagramTitle: optionalText,
+  diagramNote: optionalText,
+  faqTitle: optionalText,
   faq: z.array(z.object({ question: optionalText, answer: optionalText })).optional().default([]),
+  relatedTitle: optionalText,
+  related: z.array(z.string()).optional().default([]),
   seoTitle: requiredText,
   seoDescription: requiredText,
   cover: optionalText,
@@ -303,5 +333,6 @@ export const leadSchema = z.object({
 export type LeadInput = z.infer<typeof leadSchema>;
 export type SiteContent = z.infer<typeof siteSchema>;
 export type HomeContent = z.infer<typeof homeSchema>;
+export type ServiceContent = z.infer<typeof serviceSchema>;
 export type Tariff = z.infer<typeof tariffSchema>;
 export type FaqItem = z.infer<typeof faqSchema>;

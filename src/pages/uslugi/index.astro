@@ -1,53 +1,115 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import Badge from "@/components/ui/Badge.astro";
+import ContactSection from "@/components/sections/ContactSection.astro";
 import Card from "@/components/ui/Card.astro";
 import Container from "@/components/ui/Container.astro";
 import { Icon } from "@/components/ui/Icon";
 import IconBox from "@/components/ui/IconBox.astro";
-import { getServices, getSite } from "@/lib/content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getHome, getServices, getSite, getTariffs, metrikaId } from "@/lib/content";
+import { withBase } from "@/lib/path";
 
 const site = getSite();
+const home = getHome();
+const tariffs = getTariffs();
 const services = await getServices();
-const groups = [
-  { id: "primary", title: "Основные направления", items: services.filter((item) => item.data.group === "primary") },
-  { id: "related", title: "Сайт, внедрение и склад", items: services.filter((item) => item.data.group === "related") }
-];
+const primary = services.filter((item) => item.data.group === "primary");
+const related = services.filter((item) => item.data.group === "related");
+const [lead, ...rest] = primary;
+const origin = Astro.site ?? new URL(site.url);
+const pageUrl = new URL(withBase("/uslugi"), origin).href;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Услуги по 1С",
+  url: pageUrl,
+  itemListElement: services.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.data.title,
+    url: new URL(withBase(`/uslugi/${item.data.slug}`), origin).href
+  }))
+};
 ---
 
 <BaseLayout
-  description="Услуги Лёгкого кода: сопровождение 1С, обмены, интеграция с Битрикс24, аудит, срочная помощь, сайты и склад."
-  title={`Услуги — ${site.name}`}
+  description="Сопровождение и доработка 1С, обмены, интеграция с Битрикс24, аудит базы и срочная помощь. Разовые задачи, пакеты часов и проекты."
+  jsonLd={[jsonLd]}
+  title={`Услуги 1С: сопровождение, обмены и интеграции — ${site.name}`}
 >
-  <main class="bg-hero" id="main-content">
-    <Container class="py-16 sm:py-20">
-      <Badge>Услуги</Badge>
-      <h1 class="mt-4 max-w-3xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl">Страницы под конкретную задачу</h1>
-      <p class="mt-5 max-w-2xl text-lg leading-8 text-[var(--color-muted)]">
-        Каждое направление — отдельный адрес. Так проще править текст и SEO, не переписывая главную.
-      </p>
-      {
-        groups.map((group) => (
-          <section class="mt-12">
-            <h2 class="text-2xl font-semibold">{group.title}</h2>
-            <div class="mt-6 grid gap-5 md:grid-cols-2">
-              {group.items.map((item) => (
-                <Card href={`/uslugi/${item.data.slug}`}>
-                  <div class="flex items-start gap-4">
-                    <IconBox class="bg-[var(--color-gold-soft)] shadow-none">
-                      <Icon name={item.data.icon} />
-                    </IconBox>
-                    <div>
-                      <h3 class="text-xl font-semibold">{item.data.title}</h3>
-                      <p class="mt-2 text-sm leading-6 text-[var(--color-muted)]">{item.data.summary}</p>
-                    </div>
+  <main id="main-content">
+    <section class="relative overflow-x-clip bg-hero">
+      <Container class="py-14 sm:py-16">
+        <h1 class="max-w-3xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl">Услуги по 1С для рабочей базы</h1>
+        <p class="mt-5 max-w-2xl text-pretty text-lg leading-8 text-[var(--color-muted)]">
+          Дорабатываем и сопровождаем 1С, исправляем обмены, связываем учёт с Битрикс24 и сайтом. Пять направлений закрывают большинство заявок. Ниже — смежные задачи.
+        </p>
+        <a class="mt-6 inline-flex font-semibold text-[var(--color-gold-deep)]" href="#kontakty">Описать задачу</a>
+      </Container>
+    </section>
+
+    <section class="py-14 sm:py-16">
+      <Container>
+        <h2 class="text-3xl font-semibold tracking-tight">Основные направления</h2>
+        {
+          lead && (
+            <Card class="mt-8" href={`/uslugi/${lead.data.slug}`} tone="inverse">
+              <p class="text-sm font-semibold text-[#ffd43b]">{lead.data.tag}</p>
+              <h3 class="mt-3 max-w-3xl text-3xl font-semibold tracking-tight">{lead.data.title}</h3>
+              <p class="mt-4 max-w-2xl text-base leading-7 text-white/75">{lead.data.summary}</p>
+              {lead.data.outcome && <p class="mt-4 max-w-2xl text-sm font-semibold text-white">{lead.data.outcome}</p>}
+            </Card>
+          )
+        }
+        <div class="mt-5 grid gap-5 md:grid-cols-2">
+          {
+            rest.map((item) => (
+              <Card href={`/uslugi/${item.data.slug}`}>
+                <div class="flex items-start gap-4">
+                  <IconBox class="bg-[var(--color-gold-soft)] shadow-none">
+                    <Icon name={item.data.icon} />
+                  </IconBox>
+                  <div class="min-w-0">
+                    <h3 class="text-xl font-semibold">{item.data.title}</h3>
+                    <p class="mt-2 text-sm leading-6 text-[var(--color-muted)]">{item.data.summary}</p>
+                    {item.data.outcome && <p class="mt-3 text-sm font-semibold text-[var(--color-gold-deep)]">{item.data.outcome}</p>}
                   </div>
+                </div>
+              </Card>
+            ))
+          }
+        </div>
+      </Container>
+    </section>
+
+    {
+      related.length > 0 && (
+        <section class="bg-white py-14 sm:py-16">
+          <Container>
+            <h2 class="text-3xl font-semibold tracking-tight">Сайт, внедрение и склад</h2>
+            <p class="mt-4 max-w-2xl text-base leading-7 text-[var(--color-muted)]">
+              Эти задачи обычно идут рядом с сопровождением и обменами: витрина, запуск конфигурации или складской контур.
+            </p>
+            <div class="mt-8 grid gap-5 lg:grid-cols-3">
+              {related.map((item) => (
+                <Card href={`/uslugi/${item.data.slug}`} tone="soft">
+                  <h3 class="text-xl font-semibold">{item.data.title}</h3>
+                  <p class="mt-2 text-sm leading-6 text-[var(--color-muted)]">{item.data.summary}</p>
+                  {item.data.outcome && <p class="mt-3 text-sm font-semibold text-[var(--color-ink)]">{item.data.outcome}</p>}
                 </Card>
               ))}
             </div>
-          </section>
-        ))
-      }
-    </Container>
+          </Container>
+        </section>
+      )
+    }
+
+    <ContactSection
+      contact={home.contact}
+      metrikaId={metrikaId(site)}
+      services={services.map((item) => ({ slug: item.data.slug, name: item.data.title }))}
+      site={site}
+      tariffs={tariffs}
+    />
   </main>
 </BaseLayout>

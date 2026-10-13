@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { readFileSync } from "node:fs";
 import node from "@astrojs/node";
+import { satteri } from "@astrojs/markdown-satteri";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
@@ -23,6 +24,30 @@ function siteBase() {
 const base = siteBase();
 const staticHost = process.env.PUBLIC_STATIC_HOST === "true";
 
+function prefixInternalLinks() {
+  const prefix = base === "/" ? "" : base;
+  return () => ({
+    name: "prefix-internal-links",
+    element: {
+      filter: ["a"],
+      visit(node, ctx) {
+        const href = node.properties?.href;
+        if (
+          typeof href !== "string" ||
+          !href.startsWith("/") ||
+          href.startsWith("//") ||
+          !prefix ||
+          href === prefix ||
+          href.startsWith(`${prefix}/`)
+        ) {
+          return;
+        }
+        ctx.setProperty(node, "href", `${prefix}${href}`);
+      }
+    }
+  });
+}
+
 const redirects = Object.fromEntries(
   redirectItems
     .filter((item) => item.enabled)
@@ -43,6 +68,11 @@ export default defineConfig({
   trailingSlash: "never",
   build: staticHost ? { format: "file" } : undefined,
   redirects,
+  markdown: {
+    processor: satteri({
+      hastPlugins: [prefixInternalLinks()]
+    })
+  },
   integrations: [
     react(),
     sitemap({

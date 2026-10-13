@@ -780,6 +780,10 @@ content:
           - name: heroLead
             label: Текст на первом экране страницы
             type: text
+          - name: heroTitle
+            label: Заголовок на первом экране
+            type: string
+            description: Если пусто, на странице будет название услуги. На карточке главной остаётся поле «Название услуги».
           - name: group
             label: Где показать на главной
             type: select
@@ -827,6 +831,44 @@ content:
           - name: secondaryButton
             label: Вторая кнопка
             component: button
+          - name: problemsTitle
+            label: Заголовок блока «Проблемы»
+            type: string
+            description: Если пусто, подставится «С чем приходят».
+          - name: problems
+            label: Проблемы клиентов
+            type: object
+            list:
+              collapsible:
+                summary: "{title}"
+            fields:
+              - name: title
+                label: Ситуация
+                type: string
+              - name: text
+                label: Как это выглядит
+                type: text
+          - name: worksTitle
+            label: Заголовок блока «Состав работ»
+            type: string
+            description: Если пусто, подставится «Что делаем».
+          - name: works
+            label: Состав работ
+            type: object
+            list:
+              collapsible:
+                summary: "{title}"
+            fields:
+              - name: title
+                label: Направление
+                type: string
+              - name: text
+                label: Что входит
+                type: text
+          - name: resultsTitle
+            label: Заголовок блока «Результат»
+            type: string
+            description: Если пусто, подставится «Что меняется после работы».
           - name: benefits
             label: Что получает клиент
             type: object
@@ -840,8 +882,12 @@ content:
               - name: text
                 label: Текст
                 type: text
+          - name: stepsTitle
+            label: Заголовок блока «Этапы»
+            type: string
+            description: Если пусто, подставится «Как проходит работа».
           - name: steps
-            label: Шаги
+            label: Этапы
             type: object
             list:
               collapsible:
@@ -851,8 +897,38 @@ content:
                 label: Заголовок
                 type: string
               - name: text
-                label: Текст
+                label: Что происходит
                 type: text
+              - name: client
+                label: Что нужно от клиента
+                type: text
+              - name: deliverable
+                label: Что передаём
+                type: text
+          - name: formatsTitle
+            label: Заголовок блока «Форматы»
+            type: string
+            description: Если пусто, подставится «Как можно работать».
+          - name: formatsNote
+            label: Пояснение к форматам
+            type: text
+          - name: formats
+            label: Форматы сотрудничества
+            type: string
+            list: true
+            description: "Коды из раздела «Тарифы»: razovaya-zadacha, soprovozhdenie-1s, integraciya-pod-klyuch. Пустой список скрывает блок. Показывайте только подходящие форматы."
+          - name: diagramTitle
+            label: Заголовок схемы
+            type: string
+            description: Только для обменов и интеграции с Битрикс24. Если пусто, у этих двух страниц останется стандартный заголовок схемы.
+          - name: diagramNote
+            label: Подпись под схемой
+            type: text
+            description: Если пусто, под схемой останется короткая стандартная подпись.
+          - name: faqTitle
+            label: Заголовок блока «Вопросы»
+            type: string
+            description: Если пусто, подставится «Вопросы по услуге».
           - name: faq
             label: Вопросы по услуге
             type: object
@@ -866,6 +942,15 @@ content:
               - name: answer
                 label: Ответ
                 type: text
+          - name: relatedTitle
+            label: Заголовок блока связанных услуг
+            type: string
+            description: Если пусто, подставится «Смежные задачи».
+          - name: related
+            label: Связанные услуги
+            type: string
+            list: true
+            description: "Адрес страницы без /uslugi/, например obmeny-1s. Две или три действительно связанные услуги. Пустой список покажет другие услуги по порядку."
           - name: body
             label: Подробное описание
             type: rich-text
