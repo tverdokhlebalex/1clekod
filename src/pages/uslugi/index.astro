@@ -86,11 +86,11 @@ const jsonLd = {
       related.length > 0 && (
         <section class="bg-white py-14 sm:py-16">
           <Container>
-            <h2 class="text-3xl font-semibold tracking-tight">Сайт, внедрение и склад</h2>
+            <h2 class="text-3xl font-semibold tracking-tight">Дополнительные направления</h2>
             <p class="mt-4 max-w-2xl text-base leading-7 text-[var(--color-muted)]">
-              Эти задачи обычно идут рядом с сопровождением и обменами: витрина, запуск конфигурации или складской контур.
+              Эти задачи идут рядом с сопровождением и обменами: витрина, маркетплейсы, запуск конфигурации или складской контур.
             </p>
-            <div class="mt-8 grid gap-5 lg:grid-cols-3">
+            <div class="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
               {related.map((item) => (
                 <Card href={`/uslugi/${item.data.slug}`} tone="soft">
                   <h3 class="text-xl font-semibold">{item.data.title}</h3>

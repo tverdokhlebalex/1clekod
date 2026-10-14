@@ -29,7 +29,7 @@
   },
   {
     "from": "/integration_marketplaces",
-    "to": "/uslugi/obmeny-1s",
+    "to": "/uslugi/integraciya-1s-marketpleysy",
     "status": 301,
     "enabled": true,
     "comment": "Интеграция с маркетплейсами"

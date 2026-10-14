@@ -43,7 +43,8 @@ const picked = service.related
 const related = picked.length > 0 ? picked : services.filter((item) => item.slug !== service.slug).slice(0, 3);
 const diagramTitles: Record<string, string> = {
   "obmeny-1s": "Как ходят данные",
-  "integraciya-1s-bitriks24": "Что связываем между 1С и Битрикс24"
+  "integraciya-1s-bitriks24": "Что связываем между 1С и Битрикс24",
+  "integraciya-1s-marketpleysy": "Как площадки сходятся в 1С"
 };
 const diagramFallback = diagramTitles[service.slug];
 const formatsNote = service.formatsNote.trim();

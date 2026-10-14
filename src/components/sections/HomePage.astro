@@ -212,7 +212,7 @@ const visuals = {
 {
   related.length > 0 && (
     <Section description={home.related.description} eyebrow={home.related.eyebrow} id="smezhnye" title={home.related.title}>
-      <div class="grid gap-4 md:grid-cols-3">
+      <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {related.map((item) => (
           <a class="group rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-white p-5 transition hover:-translate-y-1 hover:border-[var(--color-amber)] hover:shadow-[var(--shadow-glow)] motion-reduce:hover:translate-y-0" href={withBase(`/uslugi/${item.data.slug}`)}>
             <h3 class="text-lg font-semibold">{item.data.title}</h3>
