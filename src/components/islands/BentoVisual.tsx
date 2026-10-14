@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Database } from "lucide-react";
+import { ArrowRight, Check, CircleAlert, Database, FileText, RefreshCw } from "lucide-react";
 
 type Kind = "queue" | "exchange" | "deal" | "audit" | "urgent";
 
@@ -7,7 +7,6 @@ const queue = [
   { title: "Обновление УТ на копии", state: "В очереди", live: false },
   { title: "Обмен заказов с сайтом", state: "Готово", live: false }
 ];
-
 const audit = [
   { title: "Доступы к базе", state: "Есть" },
   { title: "Журнал обменов", state: "Смотрим" },
@@ -15,101 +14,61 @@ const audit = [
 ];
 
 export function BentoVisual({ kind }: { kind: Kind }) {
-  if (kind === "queue") {
-    return (
-      <div aria-hidden className="rounded-[var(--radius-lg)] border border-white/10 bg-[#111827] p-4 text-white">
-        <p className="text-xs font-medium text-white/60">Очередь задач · пример</p>
-        <div className="mt-3 grid gap-2">
-          {queue.map((item) => (
-            <div className="flex items-center justify-between gap-3 rounded-[var(--radius-sm)] bg-white/[0.05] px-3 py-2.5" key={item.title}>
-              <span className="min-w-0 flex-1 truncate text-sm">{item.title}</span>
-              <span className={item.live ? "shrink-0 whitespace-nowrap text-xs font-semibold text-[#8ea2ff]" : "shrink-0 whitespace-nowrap text-xs font-semibold text-[#ffd43b]"}>{item.state}</span>
-            </div>
-          ))}
-        </div>
+  if (kind === "queue") return (
+    <div aria-hidden className="service-demo service-demo--queue">
+      <p className="service-demo__caption"><span className="service-demo__dot" />Очередь задач · пример</p>
+      <div className="service-demo__queue">
+        {queue.map((item, index) => <div className={item.live ? "is-active" : ""} key={item.title}>
+          <span className="service-demo__task-icon">{index === 2 ? <Check size={15} /> : <FileText size={15} />}</span>
+          <span>{item.title}</span><small>{item.state}</small>
+        </div>)}
       </div>
-    );
-  }
+    </div>
+  );
 
-  if (kind === "exchange") {
-    return (
-      <div aria-hidden className="rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-[#f8fafc] p-4">
-        <p className="text-xs font-medium text-[var(--color-muted)]">Передача данных · пример</p>
-        <div className="mt-4 grid gap-3">
-          <Flow from="1С" to="Сайт" />
-          <Flow from="Сайт" to="Склад" blue />
-        </div>
-      </div>
-    );
-  }
+  if (kind === "exchange") return (
+    <div aria-hidden className="service-demo service-demo--exchange">
+      <p className="service-demo__caption">Передача данных · пример</p>
+      <div className="service-demo__flows"><Flow from="1С" to="Сайт" /><Flow from="Сайт" to="Склад" reverse /></div>
+      <svg className="service-demo__wave" viewBox="0 0 360 46" fill="none">
+        <path d="M0 36H360M0 16H360" stroke="currentColor" opacity=".12" />
+        <path d="M0 35H40L48 29H78L86 35H126L138 12L147 28H172L184 7L196 28H226L238 18L248 25H272L283 6L294 21H326L340 12H360" stroke="currentColor" strokeWidth="2" />
+      </svg>
+    </div>
+  );
 
-  if (kind === "deal") {
-    return (
-      <div aria-hidden className="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-[#f8fafc] p-4">
-        <p className="text-xs font-medium text-[var(--color-muted)]">Сделка уходит в учёт · пример</p>
-        <div className="mt-4 flex items-center gap-2">
-          <Chip label="Битрикс24" text="Сделка" />
-          <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-[#e2e8f0] [container-type:inline-size]">
-            <span className="packet absolute left-0 top-1/2 size-2.5 -translate-y-1/2 rounded-full bg-[#4d6bff] shadow-[0_0_12px_rgb(77_107_255_/_0.8)]" />
-          </div>
-          <Chip label="1С" text="Заказ" gold />
-        </div>
+  if (kind === "deal") return (
+    <div aria-hidden className="service-demo service-demo--deal">
+      <p className="service-demo__caption">Сделка уходит в учёт · пример</p>
+      <div className="service-demo__sync">
+        <div className="service-demo__endpoint"><span>Битрикс24</span><strong>Сделка</strong></div>
+        <div className="service-demo__sync-line"><RefreshCw size={18} /></div>
+        <div className="service-demo__endpoint service-demo__endpoint--gold"><span>1С</span><strong><Check size={14} />Заказ</strong></div>
       </div>
-    );
-  }
+    </div>
+  );
 
-  if (kind === "audit") {
-    return (
-      <div aria-hidden className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-white p-4">
-        <div className="scan-line pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-transparent via-[#4d6bff]/15 to-transparent" />
-        <p className="text-xs font-medium text-[var(--color-muted)]">Проверка контура · пример</p>
-        <div className="mt-3 grid gap-2">
-          {audit.map((item) => (
-            <div className="flex items-center justify-between gap-3 text-sm" key={item.title}>
-              <span>{item.title}</span>
-              <span className="rounded-full bg-[var(--color-gold-soft)] px-2 py-0.5 text-xs font-semibold text-[var(--color-gold-deep)]">{item.state}</span>
-            </div>
-          ))}
-        </div>
+  if (kind === "audit") return (
+    <div aria-hidden className="service-demo service-demo--audit">
+      <p className="service-demo__caption">Проверка контура · пример</p>
+      <div className="service-demo__diagnostic">
+        <div className="service-demo__scan"><Database size={25} /><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="43" /><circle cx="50" cy="50" r="43" /></svg></div>
+        <div className="service-demo__checks">{audit.map((item) => <div key={item.title}><span>{item.title}</span><strong>{item.state}</strong></div>)}</div>
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
-    <div aria-hidden className="flex flex-wrap items-center gap-2">
-      {["Не проводится", "Обмен встал", "Смотрим симптом"].map((item) => (
-        <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold" key={item}>
-          {item}
-        </span>
-      ))}
-      <ArrowRight aria-hidden className="text-[#ffd43b]" size={16} />
+    <div aria-hidden className="service-demo service-demo--urgent">
+      <div className="service-demo__error"><CircleAlert size={20} /><strong>Не проводится</strong><i /></div>
+      <div className="service-demo__incident"><span>Обмен встал</span><ArrowRight size={16} /><span>Смотрим симптом</span></div>
+      <div className="service-demo__trace"><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /></div>
     </div>
   );
 }
 
-function Flow({ from, to, blue = false }: { from: string; to: string; blue?: boolean }) {
-  return (
-    <div className="flex items-center gap-2">
-      <span className="flex w-14 shrink-0 items-center gap-1.5 text-xs font-semibold text-[var(--color-ink)]">
-        {from === "1С" && <Database aria-hidden size={14} />}
-        {from}
-      </span>
-      <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-[#e2e8f0] [container-type:inline-size]">
-        <span className={`packet absolute left-0 top-1/2 size-2 -translate-y-1/2 rounded-full ${blue ? "bg-[#4d6bff]" : "bg-[#f5b800]"}`} />
-      </div>
-      <span className="w-14 shrink-0 text-right text-xs font-semibold text-[var(--color-ink)]">{to}</span>
-    </div>
-  );
-}
-
-function Chip({ label, text, gold = false }: { label: string; text: string; gold?: boolean }) {
-  return (
-    <div className={`min-w-24 rounded-[var(--radius-md)] border px-3 py-2 ${gold ? "border-[#f5b800]/50 bg-[#fff8d6]" : "border-[var(--color-line)] bg-white"}`}>
-      <p className="text-[11px] text-[var(--color-muted)]">{label}</p>
-      <p className="flex items-center gap-1 text-sm font-semibold">
-        {gold && <Check aria-hidden size={14} />}
-        {text}
-      </p>
-    </div>
-  );
+function Flow({ from, to, reverse = false }: { from: string; to: string; reverse?: boolean }) {
+  return <div className={`service-demo__flow ${reverse ? "is-reverse" : ""}`}>
+    <span>{from}</span><div><i /><i /><i /></div><ArrowRight size={14} /><span>{to}</span>
+  </div>;
 }

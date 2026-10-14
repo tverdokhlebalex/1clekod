@@ -13,7 +13,7 @@ import Section from "@/components/ui/Section.astro";
 import { Icon } from "@/components/ui/Icon";
 import { getCases, getFaq, getHome, getServices, getSite, getTariffs, metrikaId } from "@/lib/content";
 import { withBase } from "@/lib/path";
-import type { BentoLayout } from "@/lib/icons";
+import "@/styles/home-design.css";
 
 const home = getHome();
 const site = getSite();
@@ -26,13 +26,6 @@ const primary = services.filter((item) => item.data.group === "primary" && item.
 const related = services.filter((item) => item.data.group === "related" && item.data.featuredOnHome);
 const serviceOptions = services.map((item) => ({ slug: item.data.slug, name: item.data.title }));
 
-const layoutClasses: Record<BentoLayout, string> = {
-  featured: "md:col-span-2 lg:col-span-7",
-  tall: "md:col-span-2 lg:col-span-5",
-  default: "lg:col-span-6",
-  banner: "md:col-span-2 lg:col-span-12"
-};
-
 const visuals = {
   "soprovozhdenie-1s": "queue",
   "obmeny-1s": "exchange",
@@ -42,25 +35,22 @@ const visuals = {
 } as const;
 ---
 
-<section class="bg-hero relative isolate overflow-hidden">
-  <div class="pointer-events-none absolute -left-16 top-8 h-72 w-[32rem] rounded-full bg-[rgb(255_212_59_/_0.38)] blur-3xl"></div>
-  <div class="pointer-events-none absolute -right-10 top-10 h-80 w-[34rem] rounded-full bg-[rgb(77_107_255_/_0.22)] blur-3xl"></div>
-  <div class="surface-grid absolute inset-0 opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent_78%)]"></div>
-  <Container class="relative grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:py-20">
-    <div>
+<section class="home-hero">
+  <Container class="home-hero__layout">
+    <div class="home-hero__copy">
       <Badge tone="light">{home.hero.eyebrow}</Badge>
-      <h1 class="mt-5 text-balance text-[2rem] font-semibold leading-[1.08] tracking-tight sm:text-[2.6rem] lg:text-[3.15rem]">
-        {home.hero.titleBefore}<span class="brand-mark">{home.hero.titleAccent}</span>{home.hero.titleAfter}
+      <h1 class="home-hero__title">
+        {home.hero.titleBefore}<span>{home.hero.titleAccent}</span>{home.hero.titleAfter}
       </h1>
-      <p class="mt-5 max-w-xl text-pretty text-base leading-7 text-[var(--color-muted)] sm:text-lg">{home.hero.description}</p>
-      <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+      <p class="home-hero__description">{home.hero.description}</p>
+      <div class="home-hero__actions">
         <Button href={home.hero.primaryButton.href} size="lg">
           {home.hero.primaryButton.label}
           <ArrowRight aria-hidden size={18} />
         </Button>
         <Button href={home.hero.secondaryButton.href} size="lg" variant="secondary">{home.hero.secondaryButton.label}</Button>
       </div>
-      <dl class="mt-8 grid gap-4 border-t border-[var(--color-line)] pt-5 sm:grid-cols-3">
+      <dl class="home-hero__proof">
         {
           home.hero.stats.map((stat) => (
             <div>
@@ -71,7 +61,7 @@ const visuals = {
         }
       </dl>
     </div>
-    <HeroPanel client:visible panel={home.hero.panel} />
+    <HeroPanel panel={home.hero.panel} />
   </Container>
 </section>
 
@@ -107,33 +97,27 @@ const visuals = {
 </Section>
 
 <Section description={home.services.description} eyebrow={home.services.eyebrow} id="uslugi" title={home.services.title}>
-  <div class="grid auto-rows-auto gap-4 md:grid-cols-2 lg:grid-cols-12">
+  <div class="home-services">
     {
       primary.map((item) => {
         const kind = visuals[item.data.slug as keyof typeof visuals];
-        const inverse = kind === "urgent";
-        const featured = item.data.layout === "featured";
         return (
-          <div class:list={["h-full", layoutClasses[item.data.layout]]}>
-            <Card class:list={["flex h-full flex-col", (featured || inverse) && "lg:flex-row lg:items-center lg:gap-8"]} href={`/uslugi/${item.data.slug}`} tone={featured ? "featured" : inverse ? "inverse" : "default"}>
-              <div class="flex min-w-0 flex-1 flex-col">
-                <div class="flex items-start justify-between gap-4">
-                  <Badge tone={inverse ? "ink" : "gold"}>{item.data.tag}</Badge>
-                </div>
-                <h3 class:list={["mt-4 font-semibold", item.data.layout === "featured" ? "text-2xl sm:text-3xl" : "text-xl"]}>{item.data.title}</h3>
-                <p class:list={["mt-3 text-sm leading-6", inverse ? "text-white/75" : "text-[var(--color-muted)]"]}>{item.data.summary}</p>
-                <p class:list={["mt-3 text-sm font-medium", inverse ? "text-[#ffd43b]" : "text-[var(--color-gold-deep)]"]}>{item.data.outcome}</p>
-                <span class="mt-5 inline-flex items-center gap-2 text-sm font-semibold">
+          <a class:list={["home-service", `home-service--${kind ?? "default"}`]} data-layout={item.data.layout} href={withBase(`/uslugi/${item.data.slug}`)}>
+              <div class="home-service__copy">
+                <span class="home-service__tag">{item.data.tag}</span>
+                <h3>{item.data.title}</h3>
+                <p class="home-service__summary">{item.data.summary}</p>
+                <p class="home-service__outcome">{item.data.outcome}</p>
+                <span class="home-service__link">
                   Подробнее <ArrowRight aria-hidden size={16} />
                 </span>
               </div>
               {kind && (
-                <div class:list={["mt-6", item.data.layout === "featured" && "lg:mt-0 lg:w-[46%]", inverse && "mt-0 lg:max-w-sm"]}>
-                  <BentoVisual client:visible kind={kind} />
+                <div class="home-service__visual">
+                  <BentoVisual kind={kind} />
                 </div>
               )}
-            </Card>
-          </div>
+          </a>
         );
       })
     }
