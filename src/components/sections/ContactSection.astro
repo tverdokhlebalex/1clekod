@@ -9,6 +9,7 @@ import type { HomeContent, SiteContent, Tariff } from "@/lib/schema";
 type Option = { slug: string; name: string };
 
 type Props = {
+  class?: string;
   site: SiteContent;
   contact: HomeContent["contact"];
   tariffs: Tariff[];
@@ -18,16 +19,16 @@ type Props = {
   defaultService?: string;
 };
 
-const { site, contact, tariffs, services, metrikaId, defaultFormat = "", defaultService = "" } = Astro.props;
+const { site, contact, tariffs, services, metrikaId, defaultFormat = "", defaultService = "", class: className = "" } = Astro.props;
 ---
 
-<Section class="pb-20 lg:pb-28" id="kontakty" tone="white">
-  <div class="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-    <div class="reveal">
+<Section class={`pb-20 lg:pb-28 ${className}`} id="kontakty" tone="white">
+  <div class="contact-layout grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+    <div class="contact-copy reveal">
       <Badge>{contact.eyebrow}</Badge>
       <h2 class="mt-4 text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">{contact.title}</h2>
       <p class="mt-5 text-lg leading-8 text-[var(--color-muted)]">{contact.description}</p>
-      <div class="mt-8 grid gap-2 text-sm">
+      <div class="contact-links mt-8 grid gap-2 text-sm">
         {
           site.phones.map((phone) => (
             <a class="font-medium hover:text-[var(--color-gold-deep)]" href={phone.href}>
@@ -37,7 +38,7 @@ const { site, contact, tariffs, services, metrikaId, defaultFormat = "", default
         }
         <a class="font-medium hover:text-[var(--color-gold-deep)]" href={`mailto:${site.email}`}>{site.email}</a>
       </div>
-      <div class="mt-8 grid gap-4">
+      <div class="contact-points mt-8 grid gap-4">
         {
           contact.points.map((point) => (
             <div class="flex items-start gap-3 text-sm font-medium">
@@ -49,7 +50,7 @@ const { site, contact, tariffs, services, metrikaId, defaultFormat = "", default
       </div>
     </div>
     <div class="reveal">
-      <Card interactive={false} class="p-5 sm:p-7">
+      <Card interactive={false} class="contact-panel p-5 sm:p-7">
         <ContactForm
           client:visible
           defaultFormat={defaultFormat}
